@@ -4,6 +4,7 @@ using BookStore.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookStore.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class BookStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240430140219_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,8 +42,6 @@ namespace BookStore.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookId");
 
                     b.ToTable("Authors", (string)null);
 
@@ -195,6 +196,21 @@ namespace BookStore.Persistence.Migrations
                             Id = 30,
                             AuthorName = "William Golding"
                         });
+                });
+
+            modelBuilder.Entity("BookStore.Domain.AuthorBooks", b =>
+                {
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookId", "AuthorId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("AuthorBooks", (string)null);
                 });
 
             modelBuilder.Entity("BookStore.Domain.Book", b =>
@@ -639,12 +655,21 @@ namespace BookStore.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BookStore.Domain.Author", b =>
+            modelBuilder.Entity("BookStore.Domain.AuthorBooks", b =>
                 {
+                    b.HasOne("BookStore.Domain.Author", "Author")
+                        .WithMany("AuthorBooks")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BookStore.Domain.Book", "Book")
-                        .WithMany("Authors")
+                        .WithMany("AuthorBooks")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
 
                     b.Navigation("Book");
                 });
@@ -660,9 +685,14 @@ namespace BookStore.Persistence.Migrations
                     b.Navigation("Genre");
                 });
 
+            modelBuilder.Entity("BookStore.Domain.Author", b =>
+                {
+                    b.Navigation("AuthorBooks");
+                });
+
             modelBuilder.Entity("BookStore.Domain.Book", b =>
                 {
-                    b.Navigation("Authors");
+                    b.Navigation("AuthorBooks");
                 });
 
             modelBuilder.Entity("BookStore.Domain.Genre", b =>

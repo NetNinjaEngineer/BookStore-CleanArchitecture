@@ -5,9 +5,8 @@ namespace BookStore.Domain
     public sealed class Author : BaseEntity
     {
         public string? AuthorName { get; set; }
-
         public int? BookId { get; set; }
-
-        public Book? Book { get; set; } = null;
+        public ICollection<Book> Books { get; set; } = [];
+        public ICollection<AuthorBooks> AuthorBooks { get; set; } = [];
     }
 }

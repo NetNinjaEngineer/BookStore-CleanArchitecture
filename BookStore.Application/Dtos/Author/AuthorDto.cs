@@ -3,7 +3,7 @@ using BookStore.Application.Dtos.Common;
 
 namespace BookStore.Application.Dtos.Author
 {
-    public class AuthorDto : BaseDto
+    public sealed class AuthorDto : BaseDto
     {
         public string? AuthorName { get; set; }
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookStore.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240430092417_SeedDatabaseWithInitialData")]
-    partial class SeedDatabaseWithInitialData
+    [Migration("20240430143521_SeedAuthorBooksDataMigration")]
+    partial class SeedAuthorBooksDataMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,8 +42,6 @@ namespace BookStore.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookId");
 
                     b.ToTable("Authors", (string)null);
 
@@ -197,6 +195,173 @@ namespace BookStore.Persistence.Migrations
                         {
                             Id = 30,
                             AuthorName = "William Golding"
+                        });
+                });
+
+            modelBuilder.Entity("BookStore.Domain.AuthorBooks", b =>
+                {
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookId", "AuthorId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("AuthorBooks", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            BookId = 1,
+                            AuthorId = 1
+                        },
+                        new
+                        {
+                            BookId = 2,
+                            AuthorId = 2
+                        },
+                        new
+                        {
+                            BookId = 3,
+                            AuthorId = 3
+                        },
+                        new
+                        {
+                            BookId = 4,
+                            AuthorId = 4
+                        },
+                        new
+                        {
+                            BookId = 5,
+                            AuthorId = 5
+                        },
+                        new
+                        {
+                            BookId = 6,
+                            AuthorId = 6
+                        },
+                        new
+                        {
+                            BookId = 7,
+                            AuthorId = 7
+                        },
+                        new
+                        {
+                            BookId = 8,
+                            AuthorId = 8
+                        },
+                        new
+                        {
+                            BookId = 9,
+                            AuthorId = 9
+                        },
+                        new
+                        {
+                            BookId = 10,
+                            AuthorId = 10
+                        },
+                        new
+                        {
+                            BookId = 11,
+                            AuthorId = 11
+                        },
+                        new
+                        {
+                            BookId = 12,
+                            AuthorId = 12
+                        },
+                        new
+                        {
+                            BookId = 13,
+                            AuthorId = 13
+                        },
+                        new
+                        {
+                            BookId = 14,
+                            AuthorId = 14
+                        },
+                        new
+                        {
+                            BookId = 15,
+                            AuthorId = 15
+                        },
+                        new
+                        {
+                            BookId = 16,
+                            AuthorId = 16
+                        },
+                        new
+                        {
+                            BookId = 17,
+                            AuthorId = 17
+                        },
+                        new
+                        {
+                            BookId = 18,
+                            AuthorId = 18
+                        },
+                        new
+                        {
+                            BookId = 19,
+                            AuthorId = 19
+                        },
+                        new
+                        {
+                            BookId = 20,
+                            AuthorId = 20
+                        },
+                        new
+                        {
+                            BookId = 21,
+                            AuthorId = 21
+                        },
+                        new
+                        {
+                            BookId = 22,
+                            AuthorId = 22
+                        },
+                        new
+                        {
+                            BookId = 23,
+                            AuthorId = 23
+                        },
+                        new
+                        {
+                            BookId = 24,
+                            AuthorId = 24
+                        },
+                        new
+                        {
+                            BookId = 25,
+                            AuthorId = 25
+                        },
+                        new
+                        {
+                            BookId = 26,
+                            AuthorId = 26
+                        },
+                        new
+                        {
+                            BookId = 27,
+                            AuthorId = 27
+                        },
+                        new
+                        {
+                            BookId = 28,
+                            AuthorId = 28
+                        },
+                        new
+                        {
+                            BookId = 29,
+                            AuthorId = 29
+                        },
+                        new
+                        {
+                            BookId = 30,
+                            AuthorId = 30
                         });
                 });
 
@@ -642,12 +807,21 @@ namespace BookStore.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BookStore.Domain.Author", b =>
+            modelBuilder.Entity("BookStore.Domain.AuthorBooks", b =>
                 {
+                    b.HasOne("BookStore.Domain.Author", "Author")
+                        .WithMany("AuthorBooks")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BookStore.Domain.Book", "Book")
-                        .WithMany("Authors")
+                        .WithMany("AuthorBooks")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
 
                     b.Navigation("Book");
                 });
@@ -663,9 +837,14 @@ namespace BookStore.Persistence.Migrations
                     b.Navigation("Genre");
                 });
 
+            modelBuilder.Entity("BookStore.Domain.Author", b =>
+                {
+                    b.Navigation("AuthorBooks");
+                });
+
             modelBuilder.Entity("BookStore.Domain.Book", b =>
                 {
-                    b.Navigation("Authors");
+                    b.Navigation("AuthorBooks");
                 });
 
             modelBuilder.Entity("BookStore.Domain.Genre", b =>

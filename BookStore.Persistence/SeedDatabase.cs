@@ -116,4 +116,41 @@ public static class SeedDatabase
         ];
         return authors;
     }
+
+    public static IEnumerable<AuthorBooks> GetAuthorBooks()
+    {
+        return
+        [
+            new AuthorBooks { AuthorId = 1, BookId = 1 },
+            new AuthorBooks { AuthorId = 2, BookId = 2 },
+            new AuthorBooks { AuthorId = 3, BookId = 3 },
+            new AuthorBooks { AuthorId = 4, BookId = 4 },
+            new AuthorBooks { AuthorId = 5, BookId = 5 },
+            new AuthorBooks { AuthorId = 6, BookId = 6 },
+            new AuthorBooks { AuthorId = 7, BookId = 7 },
+            new AuthorBooks { AuthorId = 8, BookId = 8 },
+            new AuthorBooks { AuthorId = 9, BookId = 9 },
+            new AuthorBooks { AuthorId = 10, BookId = 10 },
+            new AuthorBooks { AuthorId = 11, BookId = 11 },
+            new AuthorBooks { AuthorId = 12, BookId = 12 },
+            new AuthorBooks { AuthorId = 13, BookId = 13 },
+            new AuthorBooks { AuthorId = 14, BookId = 14 },
+            new AuthorBooks { AuthorId = 15, BookId = 15 },
+            new AuthorBooks { AuthorId = 16, BookId = 16 },
+            new AuthorBooks { AuthorId = 17, BookId = 17 },
+            new AuthorBooks { AuthorId = 18, BookId = 18 },
+            new AuthorBooks { AuthorId = 19, BookId = 19 },
+            new AuthorBooks { AuthorId = 20, BookId = 20 },
+            new AuthorBooks { AuthorId = 21, BookId = 21 },
+            new AuthorBooks { AuthorId = 22, BookId = 22 },
+            new AuthorBooks { AuthorId = 23, BookId = 23 },
+            new AuthorBooks { AuthorId = 24, BookId = 24 },
+            new AuthorBooks { AuthorId = 25, BookId = 25 },
+            new AuthorBooks { AuthorId = 26, BookId = 26 },
+            new AuthorBooks { AuthorId = 27, BookId = 27 },
+            new AuthorBooks { AuthorId = 28, BookId = 28 },
+            new AuthorBooks { AuthorId = 29, BookId = 29 },
+            new AuthorBooks { AuthorId = 30, BookId = 30 }
+        ];
+    }
 }

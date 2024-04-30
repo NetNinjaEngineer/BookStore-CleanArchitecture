@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Genre\" />
-    <Folder Include="UseCases\Book\" />
+    <Folder Include="UseCases\Book\Handlers\" />
+    <Folder Include="UseCases\Book\Requests\" />
   </ItemGroup>
 
   <ItemGroup>

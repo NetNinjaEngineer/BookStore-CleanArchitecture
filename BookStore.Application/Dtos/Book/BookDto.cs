@@ -1,5 +1,6 @@
-﻿using BookStore.Application.Dtos.Common;
-using BookStore.Domain;
+﻿using BookStore.Application.Dtos.Author;
+using BookStore.Application.Dtos.Common;
+using BookStore.Application.Dtos.Genre;
 
 namespace BookStore.Application.Dtos.Book
 {
@@ -11,10 +12,10 @@ namespace BookStore.Application.Dtos.Book
 
         public decimal Price { get; set; }
 
-        public ICollection<Author> Authors { get; set; } = [];
+        public ICollection<AuthorDto> Authors { get; set; } = [];
 
         public int GenreId { get; set; }
 
-        public Genre Genre { get; set; } = null!;
+        public GenreDto Genre { get; set; } = null!;
     }
 }

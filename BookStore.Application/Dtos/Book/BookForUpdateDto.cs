@@ -1,4 +1,4 @@
 ﻿namespace BookStore.Application.Dtos.Book
 {
-    public class BookForUpdateDto : BookForCreationDto { }
+    public sealed record BookForUpdateDto : BookForManipulationDto { }
 }

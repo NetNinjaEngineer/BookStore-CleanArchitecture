@@ -15,11 +15,12 @@ namespace BookStore.Persistence.Configurations
                 .HasColumnType("varchar")
                 .HasMaxLength(100).IsRequired();
 
-            builder.HasOne(x => x.Book)
+            builder.HasMany(x => x.Books)
                 .WithMany(x => x.Authors)
-                .HasForeignKey(x => x.BookId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
+                .UsingEntity<AuthorBooks>(
+                    left => left.HasOne(x => x.Book).WithMany(x => x.AuthorBooks).HasForeignKey(x => x.BookId),
+                    right => right.HasOne(x => x.Author).WithMany(x => x.AuthorBooks).HasForeignKey(x => x.AuthorId)
+                );
 
             builder.HasData(SeedDatabase.GetAuthors());
 
