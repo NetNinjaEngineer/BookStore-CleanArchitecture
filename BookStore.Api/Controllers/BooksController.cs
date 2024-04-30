@@ -1,29 +1,32 @@
-﻿using BookStore.Application.Contracts.Infrastructure;
+﻿using BookStore.Application.Dtos.Book;
+using BookStore.Application.UseCases.Book.Requests.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class BooksController(IMediator mediator) : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<BooksController> _logger;
-
-        public BooksController(IUnitOfWork unitOfWork, ILogger<BooksController> logger)
+        [HttpGet]
+        public async Task<ActionResult<IQueryable<BookWithDetailsDto>>> GetBooksWithDetails()
         {
-            _unitOfWork = unitOfWork;
-            _logger = logger;
+            var booksWithDetailsQuery = await mediator.Send(new GetAllBooksWithDetailsQuery());
+
+            if (booksWithDetailsQuery.Any())
+                return Ok(booksWithDetailsQuery);
+
+            return NotFound("There is no books founded yet.");
         }
 
-        [HttpGet]
-        public IActionResult GetBooks()
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BookWithDetailsDto>> GetBookWithDetails(int id)
         {
-            var books = _unitOfWork.BookRepository.FindAll(x => x.Authors);
-            if (!books.Any())
-                return NotFound("There is no books founded");
+            var bookWithDetailsQuery = await mediator.Send(new GetBookWithDetailsQuery { Id = id });
 
-            return Ok(books);
+            return bookWithDetailsQuery is null ? NotFound("Requested Book Not Founded.") : Ok(bookWithDetailsQuery);
+
         }
     }
 }

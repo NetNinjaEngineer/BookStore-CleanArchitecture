@@ -7,12 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="UseCases\Book\Requests\Commands\**" />
+    <EmbeddedResource Remove="UseCases\Book\Requests\Commands\**" />
+    <None Remove="UseCases\Book\Requests\Commands\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BookStore.Domain\BookStore.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UseCases\Book\Handlers\" />
-    <Folder Include="UseCases\Book\Requests\" />
+    <Folder Include="UseCases\Book\Handlers\Commands\" />
   </ItemGroup>
 
   <ItemGroup>

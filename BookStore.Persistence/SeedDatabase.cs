@@ -1,5 +1,7 @@
 ﻿using BookStore.Domain;
 
+namespace BookStore.Persistence;
+
 public static class SeedDatabase
 {
     public static IEnumerable<Genre> GetGenres()
@@ -46,35 +48,35 @@ public static class SeedDatabase
         List<Book> books =
         [
             new Book { Id = 1, Title = "1984", PublicationYear = 1949, Price = 10.99m, GenreId = 24 },
-                new Book { Id = 2, Title = "To Kill a Mockingbird", PublicationYear = 1960, Price = 12.99m, GenreId = 7 },
-                new Book { Id = 3, Title = "The Great Gatsby", PublicationYear = 1925, Price = 9.99m, GenreId = 14 },
-                new Book { Id = 4, Title = "Pride and Prejudice", PublicationYear = 1813, Price = 8.99m, GenreId = 2 },
-                new Book { Id = 5, Title = "The Catcher in the Rye", PublicationYear = 1951, Price = 11.99m, GenreId = 14 },
-                new Book { Id = 6, Title = "Harry Potter and the Philosopher's Stone", PublicationYear = 1997, Price = 15.99m, GenreId = 4 },
-                new Book { Id = 7, Title = "The Lord of the Rings", PublicationYear = 1954, Price = 18.99m, GenreId = 4 },
-                new Book { Id = 8, Title = "The Hobbit", PublicationYear = 1937, Price = 14.99m, GenreId = 4 },
-                new Book { Id = 9, Title = "Animal Farm", PublicationYear = 1945, Price = 10.99m, GenreId = 14 },
-                new Book { Id = 10, Title = "The Chronicles of Narnia", PublicationYear = 1950, Price = 17.99m, GenreId = 4 },
-                new Book { Id = 11, Title = "The Da Vinci Code", PublicationYear = 2003, Price = 13.99m, GenreId = 1 },
-                new Book { Id = 12, Title = "The Alchemist", PublicationYear = 1988, Price = 11.99m, GenreId = 21 },
-                new Book { Id = 13, Title = "The Girl with the Dragon Tattoo", PublicationYear = 2005, Price = 14.99m, GenreId = 15 },
-                new Book { Id = 14, Title = "Gone Girl", PublicationYear = 2012, Price = 12.99m, GenreId = 15 },
-                new Book { Id = 15, Title = "The Hunger Games", PublicationYear = 2008, Price = 10.99m, GenreId = 16 },
-                new Book { Id = 16, Title = "The Hitchhiker's Guide to the Galaxy", PublicationYear = 1979, Price = 9.99m, GenreId = 4 },
-                new Book { Id = 17, Title = "Jane Eyre", PublicationYear = 1847, Price = 8.99m, GenreId = 2 },
-                new Book { Id = 18, Title = "Brave New World", PublicationYear = 1932, Price = 12.99m, GenreId = 24 },
-                new Book { Id = 19, Title = "Moby-Dick", PublicationYear = 1851, Price = 15.99m, GenreId = 4 },
-                new Book { Id = 20, Title = "A Game of Thrones", PublicationYear = 1996, Price = 20.99m, GenreId = 4 },
-                new Book { Id = 21, Title = "The Road", PublicationYear = 2006, Price = 11.99m, GenreId = 24 },
-                new Book { Id = 22, Title = "The Kite Runner", PublicationYear = 2003, Price = 13.99m, GenreId = 24 },
-                new Book { Id = 23, Title = "Wuthering Heights", PublicationYear = 1847, Price = 10.99m, GenreId = 2 },
-                new Book { Id = 24, Title = "Crime and Punishment", PublicationYear = 1866, Price = 14.99m, GenreId = 15 },
-                new Book { Id = 25, Title = "The Picture of Dorian Gray", PublicationYear = 1890, Price = 9.99m, GenreId = 14 },
-                new Book { Id = 26, Title = "Frankenstein", PublicationYear = 1818, Price = 11.99m, GenreId = 6 },
-                new Book { Id = 27, Title = "The Count of Monte Cristo", PublicationYear = 1844, Price = 16.99m, GenreId = 14 },
-                new Book { Id = 28, Title = "The Bell Jar", PublicationYear = 1963, Price = 12.99m, GenreId = 9 },
-                new Book { Id = 29, Title = "The Shining", PublicationYear = 1977, Price = 13.99m, GenreId = 6 },
-                new Book { Id = 30, Title = "Lord of the Flies", PublicationYear = 1954, Price = 10.99m, GenreId = 6 }
+            new Book { Id = 2, Title = "To Kill a Mockingbird", PublicationYear = 1960, Price = 12.99m, GenreId = 7 },
+            new Book { Id = 3, Title = "The Great Gatsby", PublicationYear = 1925, Price = 9.99m, GenreId = 14 },
+            new Book { Id = 4, Title = "Pride and Prejudice", PublicationYear = 1813, Price = 8.99m, GenreId = 2 },
+            new Book { Id = 5, Title = "The Catcher in the Rye", PublicationYear = 1951, Price = 11.99m, GenreId = 14 },
+            new Book { Id = 6, Title = "Harry Potter and the Philosopher's Stone", PublicationYear = 1997, Price = 15.99m, GenreId = 4 },
+            new Book { Id = 7, Title = "The Lord of the Rings", PublicationYear = 1954, Price = 18.99m, GenreId = 4 },
+            new Book { Id = 8, Title = "The Hobbit", PublicationYear = 1937, Price = 14.99m, GenreId = 4 },
+            new Book { Id = 9, Title = "Animal Farm", PublicationYear = 1945, Price = 10.99m, GenreId = 14 },
+            new Book { Id = 10, Title = "The Chronicles of Narnia", PublicationYear = 1950, Price = 17.99m, GenreId = 4 },
+            new Book { Id = 11, Title = "The Da Vinci Code", PublicationYear = 2003, Price = 13.99m, GenreId = 1 },
+            new Book { Id = 12, Title = "The Alchemist", PublicationYear = 1988, Price = 11.99m, GenreId = 21 },
+            new Book { Id = 13, Title = "The Girl with the Dragon Tattoo", PublicationYear = 2005, Price = 14.99m, GenreId = 15 },
+            new Book { Id = 14, Title = "Gone Girl", PublicationYear = 2012, Price = 12.99m, GenreId = 15 },
+            new Book { Id = 15, Title = "The Hunger Games", PublicationYear = 2008, Price = 10.99m, GenreId = 16 },
+            new Book { Id = 16, Title = "The Hitchhiker's Guide to the Galaxy", PublicationYear = 1979, Price = 9.99m, GenreId = 4 },
+            new Book { Id = 17, Title = "Jane Eyre", PublicationYear = 1847, Price = 8.99m, GenreId = 2 },
+            new Book { Id = 18, Title = "Brave New World", PublicationYear = 1932, Price = 12.99m, GenreId = 24 },
+            new Book { Id = 19, Title = "Moby-Dick", PublicationYear = 1851, Price = 15.99m, GenreId = 4 },
+            new Book { Id = 20, Title = "A Game of Thrones", PublicationYear = 1996, Price = 20.99m, GenreId = 4 },
+            new Book { Id = 21, Title = "The Road", PublicationYear = 2006, Price = 11.99m, GenreId = 24 },
+            new Book { Id = 22, Title = "The Kite Runner", PublicationYear = 2003, Price = 13.99m, GenreId = 24 },
+            new Book { Id = 23, Title = "Wuthering Heights", PublicationYear = 1847, Price = 10.99m, GenreId = 2 },
+            new Book { Id = 24, Title = "Crime and Punishment", PublicationYear = 1866, Price = 14.99m, GenreId = 15 },
+            new Book { Id = 25, Title = "The Picture of Dorian Gray", PublicationYear = 1890, Price = 9.99m, GenreId = 14 },
+            new Book { Id = 26, Title = "Frankenstein", PublicationYear = 1818, Price = 11.99m, GenreId = 6 },
+            new Book { Id = 27, Title = "The Count of Monte Cristo", PublicationYear = 1844, Price = 16.99m, GenreId = 14 },
+            new Book { Id = 28, Title = "The Bell Jar", PublicationYear = 1963, Price = 12.99m, GenreId = 9 },
+            new Book { Id = 29, Title = "The Shining", PublicationYear = 1977, Price = 13.99m, GenreId = 6 },
+            new Book { Id = 30, Title = "Lord of the Flies", PublicationYear = 1954, Price = 10.99m, GenreId = 6 }
         ];
         return books;
     }

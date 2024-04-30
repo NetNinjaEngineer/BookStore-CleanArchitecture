@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Persistence
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : DbContext(options)
     {
         public DbSet<Book> Books { get; set; } = null!;

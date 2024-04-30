@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BookStore.Persistence.Configurations;
-internal class AuthorBooksConfiguration : IEntityTypeConfiguration<AuthorBooks>
+public sealed class AuthorBooksConfiguration : IEntityTypeConfiguration<AuthorBooks>
 {
     public void Configure(EntityTypeBuilder<AuthorBooks> builder)
     {

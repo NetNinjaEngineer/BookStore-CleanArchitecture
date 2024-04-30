@@ -2,31 +2,30 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BookStore.Persistence.Configurations
+namespace BookStore.Persistence.Configurations;
+
+public sealed class BookConfiguration : IEntityTypeConfiguration<Book>
 {
-    public class BookConfiguration : IEntityTypeConfiguration<Book>
+    public void Configure(EntityTypeBuilder<Book> builder)
     {
-        public void Configure(EntityTypeBuilder<Book> builder)
-        {
-            builder.HasKey(x => x.Id);
+        builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
-            builder.Property(x => x.Title)
-                .HasColumnType("varchar").HasMaxLength(128)
-                .IsRequired();
+        builder.Property(x => x.Title)
+            .HasColumnType("varchar").HasMaxLength(128)
+            .IsRequired();
 
-            builder.Property(x => x.Price)
-                .HasPrecision(18, 2).IsRequired();
+        builder.Property(x => x.Price)
+            .HasPrecision(18, 2).IsRequired();
 
-            builder.HasOne(x => x.Genre)
-                .WithMany(x => x.Books)
-                .HasForeignKey(x => x.GenreId)
-                .IsRequired();
+        builder.HasOne(x => x.Genre)
+            .WithMany(x => x.Books)
+            .HasForeignKey(x => x.GenreId)
+            .IsRequired();
 
-            builder.HasData(SeedDatabase.GetBooks());
+        builder.HasData(SeedDatabase.GetBooks());
 
-            builder.ToTable("Books");
-        }
+        builder.ToTable("Books");
     }
 }

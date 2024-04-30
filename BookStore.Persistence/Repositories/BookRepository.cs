@@ -3,7 +3,9 @@ using BookStore.Domain;
 
 namespace BookStore.Persistence.Repositories
 {
-    public class BookRepository(ApplicationDbContext dbContext)
-        : GenericRepository<Book>(dbContext), IBookRepository
-    { }
+    public sealed class BookRepository(ApplicationDbContext dbContext)
+        : GenericRepository<Book>(dbContext),
+        IBookRepository
+    {
+    }
 }
