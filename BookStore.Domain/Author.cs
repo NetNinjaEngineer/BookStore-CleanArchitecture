@@ -1,9 +1,9 @@
-﻿namespace BookStore.Domain
-{
-    public class Author
-    {
-        public int Id { get; set; }
+﻿using BookStore.Domain.Common;
 
+namespace BookStore.Domain
+{
+    public sealed class Author : BaseEntity
+    {
         public string? AuthorName { get; set; }
 
         public int? BookId { get; set; }
