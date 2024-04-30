@@ -10,10 +10,12 @@ namespace BookStore.Persistence
     {
         public static IServiceCollection RegisterPersistenceServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<BookStoreDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IBookRepository, BookRepository>();
 

@@ -4,19 +4,19 @@ using Microsoft.Extensions.Configuration;
 
 namespace BookStore.Persistence
 {
-    public class BookStoreDbContextFactory : IDesignTimeDbContextFactory<BookStoreDbContext>
+    public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
-        public BookStoreDbContext CreateDbContext(string[] args)
+        public ApplicationDbContext CreateDbContext(string[] args)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var optionsBuilder = new DbContextOptionsBuilder<BookStoreDbContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 
-            return new BookStoreDbContext(optionsBuilder.Options);
+            return new ApplicationDbContext(optionsBuilder.Options);
 
         }
     }

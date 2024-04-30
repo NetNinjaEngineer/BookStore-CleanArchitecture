@@ -19,6 +19,13 @@ namespace BookStore.Persistence.Configurations
             builder.Property(x => x.Price)
                 .HasPrecision(18, 2).IsRequired();
 
+            builder.HasOne(x => x.Genre)
+                .WithMany(x => x.Books)
+                .HasForeignKey(x => x.GenreId)
+                .IsRequired();
+
+            builder.HasData(SeedDatabase.GetBooks());
+
             builder.ToTable("Books");
         }
     }

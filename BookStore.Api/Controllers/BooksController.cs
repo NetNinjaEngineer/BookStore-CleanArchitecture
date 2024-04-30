@@ -7,18 +7,20 @@ namespace BookStore.Api.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly IBookRepository _bookRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<BooksController> _logger;
 
-        public BooksController(IBookRepository bookRepository)
+        public BooksController(IUnitOfWork unitOfWork, ILogger<BooksController> logger)
         {
-            _bookRepository = bookRepository;
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         [HttpGet]
         public IActionResult GetBooks()
         {
-            var books = _bookRepository.FindAll();
-            if (books.Count() == 0)
+            var books = _unitOfWork.BookRepository.FindAll(x => x.Authors);
+            if (!books.Any())
                 return NotFound("There is no books founded");
 
             return Ok(books);
