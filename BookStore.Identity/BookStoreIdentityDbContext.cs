@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BookStore.Identity.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Identity;
 public sealed class BookStoreIdentityDbContext
-    (DbContextOptions options) : IdentityDbContext<IdentityUser>(options)
+    (DbContextOptions options) : IdentityDbContext<ApplicationUser>(options)
 {
 
 }
