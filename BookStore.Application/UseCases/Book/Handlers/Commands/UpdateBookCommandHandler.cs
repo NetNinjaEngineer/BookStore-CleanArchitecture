@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookStore.Application.Contracts.Infrastructure;
+using BookStore.Application.Exceptions;
 using BookStore.Application.UseCases.Book.Requests.Commands;
 using MediatR;
 
@@ -34,13 +35,13 @@ public sealed class UpdateBookCommandHandler(
                 var (created, uniqueImageName) = Utility.Utility
                     .UploadImage(request.BookForUpdateDto.ImageForUpdate, "Books");
 
-                if (created)
-                {
-                    bookForUpdate.ImageName = uniqueImageName;
-                    _unitOfWork.BookRepository.Update(bookForUpdate);
-                    await _unitOfWork.SaveChangesAsync();
-                    return Unit.Value;
-                }
+                if (!created)
+                    throw new ImageUploadFailedException("Failed to upload book image.");
+
+                bookForUpdate.ImageName = uniqueImageName;
+                _unitOfWork.BookRepository.Update(bookForUpdate);
+                await _unitOfWork.SaveChangesAsync();
+                return Unit.Value;
 
             }
         }
