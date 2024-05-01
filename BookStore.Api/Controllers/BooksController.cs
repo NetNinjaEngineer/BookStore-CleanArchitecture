@@ -11,35 +11,50 @@ namespace BookStore.Api.Controllers
     public class BooksController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<IQueryable<BookWithDetailsDto>>> GetBooksWithDetails()
+        public async Task<ActionResult<IQueryable<BookWithDetailsDto>>> GetAllBooksWithDetails()
         {
-            var booksWithDetailsQuery = await mediator.Send(new GetAllBooksWithDetailsQuery());
-
-            if (booksWithDetailsQuery.Any())
+            try
+            {
+                var booksWithDetailsQuery = await mediator.Send(new GetAllBooksWithDetailsQuery());
                 return Ok(booksWithDetailsQuery);
-
-            return NotFound("There is no books founded yet.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<BookWithDetailsDto>> GetBookWithDetails(int id)
         {
-            var bookWithDetailsQuery = await mediator.Send(new GetBookWithDetailsQuery { Id = id });
-
-            return bookWithDetailsQuery is null ? NotFound("Requested Book Not Founded.") : Ok(bookWithDetailsQuery);
-
+            try
+            {
+                var bookWithDetailsQuery = await mediator.Send(new GetBookWithDetailsQuery { Id = id });
+                return Ok(bookWithDetailsQuery);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateBook([FromForm] BookForCreationDto bookForCreationDto)
         {
-            await mediator.Send(new CreateBookCommand
+            try
             {
-                Image = bookForCreationDto.Image,
-                BookForCreationDto = bookForCreationDto
-            });
+                await mediator.Send(new CreateBookCommand
+                {
+                    Image = bookForCreationDto.Image,
+                    BookForCreationDto = bookForCreationDto
+                });
 
-            return Ok(bookForCreationDto);
+                return Ok(bookForCreationDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
