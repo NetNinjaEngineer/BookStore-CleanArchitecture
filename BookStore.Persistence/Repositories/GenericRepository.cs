@@ -15,7 +15,11 @@ namespace BookStore.Persistence.Repositories
             _dbSet = _dbContext.Set<T>();
         }
 
-        public void Create(T entity) => _dbSet.Add(entity);
+        public T Create(T entity)
+        {
+            _dbSet.Add(entity);
+            return entity;
+        }
 
         public void Delete(T entity) => _dbSet.Remove(entity);
 

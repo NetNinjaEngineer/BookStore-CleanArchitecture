@@ -45,11 +45,24 @@ namespace BookStore.Api.Controllers
             {
                 await mediator.Send(new CreateBookCommand
                 {
-                    Image = bookForCreationDto.Image,
-                    BookForCreationDto = bookForCreationDto
+                    BookForCreationDto = bookForCreationDto,
                 });
 
                 return Ok(bookForCreationDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBook(int id, [FromForm] BookForUpdateDto bookForUpdateDto)
+        {
+            try
+            {
+                await mediator.Send(new UpdateBookCommand { BookId = id, BookForUpdateDto = bookForUpdateDto });
+                return Ok(bookForUpdateDto);
             }
             catch (Exception ex)
             {

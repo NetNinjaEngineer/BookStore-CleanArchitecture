@@ -17,10 +17,7 @@ public sealed class AuthorConfiguration : IEntityTypeConfiguration<Author>
 
         builder.HasMany(x => x.Books)
             .WithMany(x => x.Authors)
-            .UsingEntity<AuthorBooks>(
-                left => left.HasOne(x => x.Book).WithMany(x => x.AuthorBooks).HasForeignKey(x => x.BookId),
-                right => right.HasOne(x => x.Author).WithMany(x => x.AuthorBooks).HasForeignKey(x => x.AuthorId)
-            );
+            .UsingEntity<AuthorBooks>();
 
         //builder.HasData(SeedDatabase.GetAuthors());
 

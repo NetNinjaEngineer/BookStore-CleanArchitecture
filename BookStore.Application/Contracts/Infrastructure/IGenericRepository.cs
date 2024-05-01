@@ -9,7 +9,7 @@ namespace BookStore.Application.Contracts.Infrastructure
         IQueryable<T> FindByCondition(Expression<Func<T, bool>> condition,
             params Expression<Func<T, object>>[] includes);
 
-        void Create(T entity);
+        T Create(T entity);
 
         void Update(T entity);
 

@@ -12,18 +12,41 @@ public sealed class CreateBookCommandHandler(
         CreateBookCommand request,
         CancellationToken cancellationToken)
     {
-        var (created, uniqueImageName) = Utility.Utility.UploadImage(request.Image, "Books");
+        var validAuthor = unitOfWork
+            .AuthorRepository
+            .FindAll()
+            .Any(x => x.Id == request.BookForCreationDto.AuthorId);
 
-        if (created)
+        var validGenre = unitOfWork
+            .GenreRepository
+            .FindAll()
+            .Any(x => x.GenreId == request.BookForCreationDto.GenreId);
+
+        if (validAuthor && validGenre)
         {
-            var bookForCreation = mapper.Map<Domain.Book>(request.BookForCreationDto);
-            bookForCreation.ImageName = uniqueImageName;
-            bookForCreation.GenreId = request.BookForCreationDto.GenreId;
-            unitOfWork.BookRepository.Create(bookForCreation);
-            await unitOfWork.SaveChangesAsync();
-            return Unit.Value;
+            var (created, uniqueImageName) = Utility.Utility
+                .UploadImage(request.BookForCreationDto.Image, "Books");
+            if (created)
+            {
+                var bookForCreation = mapper.Map<Domain.Book>(request.BookForCreationDto);
+                bookForCreation.ImageName = uniqueImageName;
+                bookForCreation.GenreId = request.BookForCreationDto.GenreId;
+
+                var createdEntity = unitOfWork.BookRepository.Create(bookForCreation);
+                await unitOfWork.SaveChangesAsync();
+
+                unitOfWork.AuthorBooksRepository.Create(new Domain.AuthorBooks
+                {
+                    AuthorId = request.BookForCreationDto.AuthorId,
+                    BookId = createdEntity.Id
+                });
+
+                await unitOfWork.SaveChangesAsync();
+
+                return Unit.Value;
+            }
         }
 
-        throw new InvalidOperationException("Image Required!!!");
+        throw new InvalidOperationException("Not valid author or valid genre !!!");
     }
 }
