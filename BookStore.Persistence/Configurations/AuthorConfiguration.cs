@@ -22,7 +22,7 @@ public sealed class AuthorConfiguration : IEntityTypeConfiguration<Author>
                 right => right.HasOne(x => x.Author).WithMany(x => x.AuthorBooks).HasForeignKey(x => x.AuthorId)
             );
 
-        builder.HasData(SeedDatabase.GetAuthors());
+        //builder.HasData(SeedDatabase.GetAuthors());
 
         builder.ToTable("Authors");
     }

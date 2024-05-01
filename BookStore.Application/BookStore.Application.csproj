@@ -7,22 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="UseCases\Book\Requests\Commands\**" />
-    <EmbeddedResource Remove="UseCases\Book\Requests\Commands\**" />
-    <None Remove="UseCases\Book\Requests\Commands\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BookStore.Domain\BookStore.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="UseCases\Book\Handlers\Commands\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
   </ItemGroup>
 
 </Project>

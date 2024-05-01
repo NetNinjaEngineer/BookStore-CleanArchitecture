@@ -1,4 +1,5 @@
 ﻿using BookStore.Application.Dtos.Book;
+using BookStore.Application.UseCases.Book.Requests.Commands;
 using BookStore.Application.UseCases.Book.Requests.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,18 @@ namespace BookStore.Api.Controllers
 
             return bookWithDetailsQuery is null ? NotFound("Requested Book Not Founded.") : Ok(bookWithDetailsQuery);
 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateBook([FromForm] BookForCreationDto bookForCreationDto)
+        {
+            await mediator.Send(new CreateBookCommand
+            {
+                Image = bookForCreationDto.Image,
+                BookForCreationDto = bookForCreationDto
+            });
+
+            return Ok(bookForCreationDto);
         }
     }
 }

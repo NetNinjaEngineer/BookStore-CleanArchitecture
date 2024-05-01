@@ -15,17 +15,9 @@ namespace BookStore.Persistence.Repositories
             _dbSet = _dbContext.Set<T>();
         }
 
-        public void Create(T entity)
-        {
-            _dbSet.Add(entity);
-            _dbContext.SaveChanges();
-        }
+        public void Create(T entity) => _dbSet.Add(entity);
 
-        public void Delete(T entity)
-        {
-            _dbSet.Remove(entity);
-            _dbContext.SaveChanges();
-        }
+        public void Delete(T entity) => _dbSet.Remove(entity);
 
         public IQueryable<T> FindAll(params Expression<Func<T, object>>[] includes)
         {
@@ -46,10 +38,6 @@ namespace BookStore.Persistence.Repositories
             return query.Where(condition);
         }
 
-        public void Update(T entity)
-        {
-            _dbSet.Update(entity);
-            _dbContext.SaveChanges();
-        }
+        public void Update(T entity) => _dbSet.Update(entity);
     }
 }

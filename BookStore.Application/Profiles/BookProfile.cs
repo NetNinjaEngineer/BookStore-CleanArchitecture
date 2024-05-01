@@ -9,6 +9,6 @@ public class BookProfile : Profile
     public BookProfile()
     {
         CreateMap<Book, BookDto>().ReverseMap();
-
+        CreateMap<Book, BookForCreationDto>().ReverseMap();
     }
 }

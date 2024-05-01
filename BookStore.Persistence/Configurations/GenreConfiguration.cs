@@ -15,7 +15,7 @@ public sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
             .HasColumnType("varchar").HasMaxLength(50)
             .IsRequired();
 
-        builder.HasData(SeedDatabase.GetGenres());
+        //builder.HasData(SeedDatabase.GetGenres());
 
         builder.ToTable("Genres");
     }

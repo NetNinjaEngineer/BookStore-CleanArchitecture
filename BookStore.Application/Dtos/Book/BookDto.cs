@@ -12,6 +12,8 @@ namespace BookStore.Application.Dtos.Book
 
         public decimal Price { get; set; }
 
+        public string? ImageName { get; set; }
+
         public ICollection<AuthorDto> Authors { get; set; } = [];
 
         public int GenreId { get; set; }

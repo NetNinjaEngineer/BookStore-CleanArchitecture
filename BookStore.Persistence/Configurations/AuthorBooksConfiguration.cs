@@ -9,7 +9,7 @@ public sealed class AuthorBooksConfiguration : IEntityTypeConfiguration<AuthorBo
     {
         builder.HasKey(x => new { x.BookId, x.AuthorId });
 
-        builder.HasData(SeedDatabase.GetAuthorBooks());
+        //builder.HasData(SeedDatabase.GetAuthorBooks());
 
         builder.ToTable("AuthorBooks");
     }

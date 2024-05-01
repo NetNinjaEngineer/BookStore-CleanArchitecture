@@ -19,12 +19,16 @@ public sealed class BookConfiguration : IEntityTypeConfiguration<Book>
         builder.Property(x => x.Price)
             .HasPrecision(18, 2).IsRequired();
 
+        builder.Property(x => x.ImageName)
+            .HasColumnType("varchar(Max)")
+            .IsRequired(false);
+
         builder.HasOne(x => x.Genre)
             .WithMany(x => x.Books)
             .HasForeignKey(x => x.GenreId)
-            .IsRequired();
+            .IsRequired(false);
 
-        builder.HasData(SeedDatabase.GetBooks());
+        //builder.HasData(SeedDatabase.GetBooks());
 
         builder.ToTable("Books");
     }
