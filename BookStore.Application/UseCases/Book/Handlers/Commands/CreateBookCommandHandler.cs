@@ -5,22 +5,23 @@ using MediatR;
 
 namespace BookStore.Application.UseCases.Book.Handlers.Commands;
 public sealed class CreateBookCommandHandler(
-    IUnitOfWork unitOfWork, IMapper mapper)
+    IUnitOfWork unitOfWork,
+    IMapper mapper
+    )
     : IRequestHandler<CreateBookCommand, Unit>
 {
     public async Task<Unit> Handle(
         CreateBookCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+        )
     {
         var validAuthor = unitOfWork
             .AuthorRepository
-            .FindAll()
-            .Any(x => x.Id == request.BookForCreationDto.AuthorId);
+            .AuthorExists(request.BookForCreationDto.AuthorId);
 
         var validGenre = unitOfWork
             .GenreRepository
-            .FindAll()
-            .Any(x => x.GenreId == request.BookForCreationDto.GenreId);
+            .GenreExists(request.BookForCreationDto.GenreId);
 
         if (validAuthor && validGenre)
         {
