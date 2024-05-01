@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookStore.Application.Contracts.Infrastructure;
+using BookStore.Application.Exceptions;
 using BookStore.Application.UseCases.Book.Requests.Commands;
 using MediatR;
 
@@ -15,39 +16,41 @@ public sealed class CreateBookCommandHandler(
         CancellationToken cancellationToken
         )
     {
-        var validAuthor = unitOfWork
+        var authorExists = unitOfWork
             .AuthorRepository
             .AuthorExists(request.BookForCreationDto.AuthorId);
 
-        var validGenre = unitOfWork
+        if (!authorExists)
+            throw new AuthorNotFoundException($"Author with ID {request.BookForCreationDto.AuthorId} not found.");
+
+        var genreExists = unitOfWork
             .GenreRepository
             .GenreExists(request.BookForCreationDto.GenreId);
 
-        if (validAuthor && validGenre)
+        if (!genreExists)
+            throw new GenreNotFoundException($"Genre with ID {request.BookForCreationDto.GenreId} not found.");
+
+        var (created, uniqueImageName) = Utility.Utility
+                        .UploadImage(request.BookForCreationDto.Image, "Books");
+
+        if (!created)
+            throw new ImageUploadFailedException("Failed to upload book image.");
+
+        var bookForCreation = mapper.Map<Domain.Book>(request.BookForCreationDto);
+        bookForCreation.ImageName = uniqueImageName;
+        bookForCreation.GenreId = request.BookForCreationDto.GenreId;
+
+        var createdEntity = unitOfWork.BookRepository.Create(bookForCreation);
+        await unitOfWork.SaveChangesAsync();
+
+        unitOfWork.AuthorBooksRepository.Create(new Domain.AuthorBooks
         {
-            var (created, uniqueImageName) = Utility.Utility
-                .UploadImage(request.BookForCreationDto.Image, "Books");
-            if (created)
-            {
-                var bookForCreation = mapper.Map<Domain.Book>(request.BookForCreationDto);
-                bookForCreation.ImageName = uniqueImageName;
-                bookForCreation.GenreId = request.BookForCreationDto.GenreId;
+            AuthorId = request.BookForCreationDto.AuthorId,
+            BookId = createdEntity.Id
+        });
 
-                var createdEntity = unitOfWork.BookRepository.Create(bookForCreation);
-                await unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
 
-                unitOfWork.AuthorBooksRepository.Create(new Domain.AuthorBooks
-                {
-                    AuthorId = request.BookForCreationDto.AuthorId,
-                    BookId = createdEntity.Id
-                });
-
-                await unitOfWork.SaveChangesAsync();
-
-                return Unit.Value;
-            }
-        }
-
-        throw new InvalidOperationException("Not valid author or valid genre !!!");
+        return Unit.Value;
     }
 }
