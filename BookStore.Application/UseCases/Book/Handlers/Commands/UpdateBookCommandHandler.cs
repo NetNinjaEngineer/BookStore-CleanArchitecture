@@ -7,7 +7,8 @@ using MediatR;
 namespace BookStore.Application.UseCases.Book.Handlers.Commands;
 public sealed class UpdateBookCommandHandler(
     IUnitOfWork unitOfWork,
-    IMapper mapper) : IRequestHandler<UpdateBookCommand, Unit>
+    IMapper mapper)
+    : IRequestHandler<UpdateBookCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork
         ?? throw new ArgumentNullException(nameof(unitOfWork));
@@ -15,7 +16,10 @@ public sealed class UpdateBookCommandHandler(
     private readonly IMapper _mapper = mapper
         ?? throw new ArgumentNullException(nameof(mapper));
 
-    public async Task<Unit> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(
+        UpdateBookCommand request,
+        CancellationToken cancellationToken
+        )
     {
         // check if there is a book with the requested id
         var entity = _unitOfWork.BookRepository
@@ -28,7 +32,7 @@ public sealed class UpdateBookCommandHandler(
             if (request.BookForUpdateDto.ImageForUpdate is not null &&
                 request.BookForUpdateDto.ImageForUpdate.Length > 0)
             {
-                var bookForUpdate = _mapper.Map<Domain.Book>(request.BookForUpdateDto);
+                var bookForUpdate = _mapper.Map(request.BookForUpdateDto, entity);
 
                 DeleteOldBookImage(entity);
 
@@ -53,7 +57,8 @@ public sealed class UpdateBookCommandHandler(
     {
         if (!string.IsNullOrEmpty(entity?.ImageName))
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files/Images/Books", entity.ImageName);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(),
+                "wwwroot\\Files\\Images\\Books", entity.ImageName);
             if (File.Exists(filePath))
                 File.Delete(filePath);
         }

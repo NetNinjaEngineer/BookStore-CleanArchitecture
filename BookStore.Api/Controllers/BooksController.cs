@@ -24,7 +24,7 @@ namespace BookStore.Api.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetBookDetail")]
         public async Task<ActionResult<BookWithDetailsDto>> GetBookWithDetails(int id)
         {
             try
@@ -43,12 +43,9 @@ namespace BookStore.Api.Controllers
         {
             try
             {
-                await mediator.Send(new CreateBookCommand
-                {
-                    BookForCreationDto = bookForCreationDto,
-                });
-
-                return Ok(bookForCreationDto);
+                var createdBook = await mediator.Send(
+                    new CreateBookCommand { BookForCreationDto = bookForCreationDto });
+                return CreatedAtRoute("GetBookDetail", new { id = createdBook.Id }, createdBook);
             }
             catch (Exception ex)
             {
@@ -62,7 +59,21 @@ namespace BookStore.Api.Controllers
             try
             {
                 await mediator.Send(new UpdateBookCommand { BookId = id, BookForUpdateDto = bookForUpdateDto });
-                return Ok(bookForUpdateDto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBook(int id)
+        {
+            try
+            {
+                await mediator.Send(new DeleteBookCommand { BookId = id });
+                return NoContent();
             }
             catch (Exception ex)
             {

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookStore.Application.Contracts.Infrastructure;
+using BookStore.Application.Dtos.Book;
 using BookStore.Application.Exceptions;
 using BookStore.Application.UseCases.Book.Requests.Commands;
 using MediatR;
@@ -9,9 +10,9 @@ public sealed class CreateBookCommandHandler(
     IUnitOfWork unitOfWork,
     IMapper mapper
     )
-    : IRequestHandler<CreateBookCommand, Unit>
+    : IRequestHandler<CreateBookCommand, BookForListDto>
 {
-    public async Task<Unit> Handle(
+    public async Task<BookForListDto> Handle(
         CreateBookCommand request,
         CancellationToken cancellationToken
         )
@@ -51,6 +52,6 @@ public sealed class CreateBookCommandHandler(
 
         await unitOfWork.SaveChangesAsync();
 
-        return Unit.Value;
+        return mapper.Map<BookForListDto>(createdEntity);
     }
 }
