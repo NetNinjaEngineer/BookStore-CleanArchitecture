@@ -2,12 +2,8 @@
 using BookStore.Domain;
 
 namespace BookStore.Persistence.Repositories;
-public sealed class AuthorBooksRepository
-    : GenericRepository<AuthorBooks>,
+public sealed class AuthorBooksRepository(ApplicationDbContext dbContext)
+        : GenericRepository<AuthorBooks>(dbContext),
     IAuthorBooksRepository
 {
-    public AuthorBooksRepository(ApplicationDbContext dbContext)
-        : base(dbContext)
-    {
-    }
 }

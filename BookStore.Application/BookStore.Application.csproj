@@ -17,4 +17,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\Author\" />
+  </ItemGroup>
+
 </Project>

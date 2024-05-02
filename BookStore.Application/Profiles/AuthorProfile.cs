@@ -8,5 +8,6 @@ public sealed class AuthorProfile : Profile
     public AuthorProfile()
     {
         CreateMap<Author, AuthorDto>().ReverseMap();
+        CreateMap<Author, AuthorForListDto>().ReverseMap();
     }
 }
