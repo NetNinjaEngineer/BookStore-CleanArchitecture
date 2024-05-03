@@ -1,6 +1,7 @@
 using BookStore.Api;
 using BookStore.Application;
 using BookStore.Identity;
+using BookStore.Identity.Services;
 using BookStore.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -40,6 +41,12 @@ app.UseCors(x =>
     .AllowAnyMethod()
     .AllowAnyOrigin()
 );
+
+using (var scope = app.Services.CreateScope())
+{
+    var seedRoleService = scope.ServiceProvider.GetRequiredService<SeedRoleService>();
+    await seedRoleService.SeedRoles();
+}
 
 app.UseStaticFiles();
 

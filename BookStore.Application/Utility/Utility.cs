@@ -17,4 +17,17 @@ public static class Utility
         }
         return (false, string.Empty);
     }
+
+    public static bool DeleteOldBookImage(string imageName)
+    {
+        if (!string.IsNullOrEmpty(imageName))
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(),
+                "wwwroot\\Files\\Images\\Books", imageName);
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+            return true;
+        }
+        return false;
+    }
 }

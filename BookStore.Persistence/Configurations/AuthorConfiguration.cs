@@ -19,7 +19,7 @@ public sealed class AuthorConfiguration : IEntityTypeConfiguration<Author>
             .WithMany(x => x.Authors)
             .UsingEntity<AuthorBooks>();
 
-        //builder.HasData(SeedDatabase.GetAuthors());
+        builder.HasData(SeedDatabase.GetAuthors());
 
         builder.ToTable("Authors");
     }

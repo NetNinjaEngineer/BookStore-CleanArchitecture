@@ -26,6 +26,8 @@ public static class IdentityServicesRegisteration
             .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<BookStoreIdentityDbContext>();
 
+        services.AddScoped<SeedRoleService>();
+
         // register authentication
         services.AddAuthentication(options =>
         {

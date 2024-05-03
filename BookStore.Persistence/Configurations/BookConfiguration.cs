@@ -28,7 +28,7 @@ public sealed class BookConfiguration : IEntityTypeConfiguration<Book>
             .HasForeignKey(x => x.GenreId)
             .IsRequired(false);
 
-        //builder.HasData(SeedDatabase.GetBooks());
+        builder.HasData(SeedDatabase.GetBooks());
 
         builder.ToTable("Books");
     }

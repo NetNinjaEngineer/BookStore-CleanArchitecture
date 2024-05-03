@@ -7,5 +7,7 @@ namespace BookStore.Persistence.Repositories
         : GenericRepository<Book>(dbContext),
         IBookRepository
     {
+        public bool Exists(int bookId)
+            => dbContext.Books.Any(x => x.Id == bookId);
     }
 }

@@ -7,15 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookStore.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class BooksController(IMediator mediator) : ControllerBase
+    public class BooksController(IMediator mediator) : BaseController(mediator)
     {
+        public IMediator Mediator { get; } = mediator;
+
         [HttpGet]
         public async Task<ActionResult<IQueryable<BookWithDetailsDto>>> GetAllBooksWithDetails()
         {
             try
             {
-                var booksWithDetailsQuery = await mediator.Send(new GetAllBooksWithDetailsQuery());
+                var booksWithDetailsQuery = await Mediator.Send(new GetAllBooksWithDetailsQuery());
                 return Ok(booksWithDetailsQuery);
             }
             catch (Exception ex)
@@ -29,7 +30,7 @@ namespace BookStore.Api.Controllers
         {
             try
             {
-                var bookWithDetailsQuery = await mediator.Send(new GetBookWithDetailsQuery { Id = id });
+                var bookWithDetailsQuery = await Mediator.Send(new GetBookWithDetailsQuery { Id = id });
                 return Ok(bookWithDetailsQuery);
             }
             catch (Exception ex)
@@ -43,7 +44,7 @@ namespace BookStore.Api.Controllers
         {
             try
             {
-                var createdBook = await mediator.Send(
+                var createdBook = await Mediator.Send(
                     new CreateBookCommand { BookForCreationDto = bookForCreationDto });
                 return CreatedAtRoute("GetBookDetail", new { id = createdBook.Id }, createdBook);
             }
@@ -58,7 +59,7 @@ namespace BookStore.Api.Controllers
         {
             try
             {
-                await mediator.Send(new UpdateBookCommand { BookId = id, BookForUpdateDto = bookForUpdateDto });
+                await Mediator.Send(new UpdateBookCommand { BookId = id, BookForUpdateDto = bookForUpdateDto });
                 return NoContent();
             }
             catch (Exception ex)
@@ -72,7 +73,7 @@ namespace BookStore.Api.Controllers
         {
             try
             {
-                await mediator.Send(new DeleteBookCommand { BookId = id });
+                await Mediator.Send(new DeleteBookCommand { BookId = id });
                 return NoContent();
             }
             catch (Exception ex)

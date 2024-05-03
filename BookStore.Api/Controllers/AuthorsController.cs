@@ -1,5 +1,5 @@
-using System.CodeDom.Compiler;
-using System.Diagnostics.Contracts;
+using BookStore.Application.Dtos.Author;
+using BookStore.Application.Responses;
 using BookStore.Application.UseCases.Author.Requests.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +13,31 @@ public class AuthorsController
     public IMediator Mediator { get; } = mediator;
 
     [HttpGet]
-    public async Task<IActionResult> GetAuthors() {
-        var result = await Mediator.Send(new GetAuthorsQuery());
-        return Ok(result);
+    [ProducesResponseType(typeof(List<AuthorForListDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAuthors()
+    {
+        try
+        {
+            return Ok(await Mediator.Send(new GetAuthorsQuery()));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("GetAuthorsWithDetails")]
+    [ProducesResponseType(typeof(IEnumerable<GetAuthorsWithDetailsResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAuthorsWithDetails()
+    {
+        try
+        {
+            return Ok(await Mediator.Send(new GetAuthorsWithDetailsQuery()));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }
