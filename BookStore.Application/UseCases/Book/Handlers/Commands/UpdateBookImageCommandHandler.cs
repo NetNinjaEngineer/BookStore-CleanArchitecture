@@ -17,7 +17,6 @@ public sealed class UpdateBookImageCommandHandler(
         if (!booksExists)
             throw new BookNotFoundException($"Book with ID {request.BookId} was not founded.");
 
-
         var (created, uniqueImageName) = Utility.Utility.UploadImage(request.ImageToUpload, "Books");
 
         if (created)
@@ -26,6 +25,9 @@ public sealed class UpdateBookImageCommandHandler(
                 .BookRepository
                 .FindByCondition(x => x.Id == request.BookId)
                 .SingleOrDefault();
+
+            if (!string.IsNullOrEmpty(book!.ImageName))
+                Utility.Utility.DeleteOldBookImage(book.ImageName);
 
             book!.ImageName = uniqueImageName;
 

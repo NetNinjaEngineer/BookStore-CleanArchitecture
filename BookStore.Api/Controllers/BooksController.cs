@@ -81,5 +81,21 @@ namespace BookStore.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Route("UpdateBookImage")]
+        [HttpPut($"{{id}}")]
+        public async Task<IActionResult> UpdateBookImage(int id, IFormFile image)
+        {
+            try
+            {
+                await Mediator.Send(new UpdateBookImageCommand { BookId = id, ImageToUpload = image });
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
