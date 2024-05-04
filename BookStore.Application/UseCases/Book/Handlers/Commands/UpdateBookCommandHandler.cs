@@ -34,7 +34,7 @@ public sealed class UpdateBookCommandHandler(
             {
                 var bookForUpdate = _mapper.Map(request.BookForUpdateDto, entity);
 
-                DeleteOldBookImage(entity);
+                Utility.Utility.DeleteOldBookImage(entity.ImageName!);
 
                 var (created, uniqueImageName) = Utility.Utility
                     .UploadImage(request.BookForUpdateDto.ImageForUpdate, "Books");
@@ -51,16 +51,5 @@ public sealed class UpdateBookCommandHandler(
         }
 
         throw new InvalidOperationException($"Book with ID {request.BookId} not found.");
-    }
-
-    private static void DeleteOldBookImage(Domain.Book? entity)
-    {
-        if (!string.IsNullOrEmpty(entity?.ImageName))
-        {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(),
-                "wwwroot\\Files\\Images\\Books", entity.ImageName);
-            if (File.Exists(filePath))
-                File.Delete(filePath);
-        }
     }
 }
