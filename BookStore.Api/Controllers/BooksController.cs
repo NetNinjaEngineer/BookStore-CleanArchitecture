@@ -12,6 +12,7 @@ namespace BookStore.Api.Controllers
         public IMediator Mediator { get; } = mediator;
 
         [HttpGet]
+        [ProducesResponseType(typeof(IQueryable<BookWithDetailsDto>), 200)]
         public async Task<ActionResult<IQueryable<BookWithDetailsDto>>> GetAllBooksWithDetails()
         {
             try
@@ -26,6 +27,7 @@ namespace BookStore.Api.Controllers
         }
 
         [HttpGet("{id}", Name = "GetBookDetail")]
+        [ProducesResponseType(typeof(BookWithDetailsDto), 200)]
         public async Task<ActionResult<BookWithDetailsDto>> GetBookWithDetails(int id)
         {
             try
@@ -40,6 +42,7 @@ namespace BookStore.Api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(BookWithDetailsDto), 201)]
         public async Task<IActionResult> CreateBook([FromForm] BookForCreationDto bookForCreationDto)
         {
             try
@@ -55,6 +58,7 @@ namespace BookStore.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> UpdateBook(int id, [FromForm] BookForUpdateDto bookForUpdateDto)
         {
             try
@@ -69,6 +73,7 @@ namespace BookStore.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteBook(int id)
         {
             try
@@ -84,6 +89,7 @@ namespace BookStore.Api.Controllers
 
         [Route("{id}/UpdateBookImage")]
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> UpdateBookImage(int id, IFormFile image)
         {
             try

@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 public class GenresController
     (IMediator mediator) : BaseController(mediator)
 {
-
     [HttpGet]
+    [ProducesResponseType(typeof(IQueryable<GenreForListDto>), 200)]
     public async Task<ActionResult<IQueryable<GenreForListDto>>> GetAllGenres()
     {
         var result = await mediator.Send(new GetAllGenreQuery());
