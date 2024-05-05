@@ -4,14 +4,13 @@ using BookStore.Identity;
 using BookStore.Identity.Services;
 using BookStore.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
 {
-    options.Filters.Add(new AuthorizeFilter());
+    //options.Filters.Add(new AuthorizeFilter());
     options.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status400BadRequest));
     options.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status406NotAcceptable));
     options.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status500InternalServerError));

@@ -82,7 +82,7 @@ namespace BookStore.Api.Controllers
             }
         }
 
-        [Route("UpdateBookImage/{id}")]
+        [Route("{id}/UpdateBookImage")]
         [HttpPut]
         public async Task<IActionResult> UpdateBookImage(int id, IFormFile image)
         {

@@ -27,9 +27,9 @@ public class AuthorsController
     }
 
     [HttpGet]
-    [Route("GetAuthorsWithDetails")]
+    [Route("GetAuthorsWithBooks")]
     [ProducesResponseType(typeof(IEnumerable<GetAuthorsWithDetailsResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAuthorsWithDetails()
+    public async Task<IActionResult> GetAuthorsWithBooks()
     {
         try
         {
