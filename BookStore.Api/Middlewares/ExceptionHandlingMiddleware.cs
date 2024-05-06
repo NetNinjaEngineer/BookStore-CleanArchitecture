@@ -27,6 +27,8 @@ public class ExceptionHandlingMiddleware
 
     private static async Task HandleExceptionAsync(HttpContext context, Exception ex)
     {
+        context.Response.ContentType = "application/json";
+
         var statusCode = HttpStatusCode.InternalServerError;
 
         switch (ex)
@@ -35,6 +37,7 @@ public class ExceptionHandlingMiddleware
                 statusCode = HttpStatusCode.UnprocessableEntity;
                 break;
             case AuthorNotFoundException:
+            case BookNotFoundException:
             case GenreNotFoundException:
                 statusCode = HttpStatusCode.NotFound;
                 break;
@@ -44,8 +47,9 @@ public class ExceptionHandlingMiddleware
         }
 
         var jsonResponse = JsonSerializer.Serialize(ex.Message);
-        context.Response.ContentType = "application/json";
+
         context.Response.StatusCode = (int)statusCode;
+
         await context.Response.WriteAsync(jsonResponse);
     }
 }

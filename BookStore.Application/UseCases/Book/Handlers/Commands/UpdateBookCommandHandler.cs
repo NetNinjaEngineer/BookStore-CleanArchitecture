@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using BookStore.Application.Contracts.Infrastructure;
+using BookStore.Application.Dtos.Book.Validators;
 using BookStore.Application.Exceptions;
+using BookStore.Application.Helpers;
 using BookStore.Application.UseCases.Book.Requests.Commands;
+using FluentValidation;
 using MediatR;
+using System.Text.Json;
 
 namespace BookStore.Application.UseCases.Book.Handlers.Commands;
 public sealed class UpdateBookCommandHandler(
@@ -21,6 +25,25 @@ public sealed class UpdateBookCommandHandler(
         CancellationToken cancellationToken
         )
     {
+
+        try
+        {
+            await new BookForUpdateDtoValidator()
+                .ValidateAndThrowAsync(request.BookForUpdateDto, cancellationToken);
+        }
+        catch (ValidationException ex)
+        {
+            var validationErrors = ex.Errors.Select(e => new ValidationError
+            {
+                PropertyName = e.PropertyName,
+                Value = e.ErrorMessage
+            });
+
+            var jsonErrors = JsonSerializer.Serialize(validationErrors);
+
+            throw new ValidationException(jsonErrors);
+        }
+
         // check if there is a book with the requested id
         var entity = _unitOfWork.BookRepository
             .FindByCondition(x => x.Id == request.BookId)
@@ -29,15 +52,15 @@ public sealed class UpdateBookCommandHandler(
         if (entity is not null)
         {
             // if update image requested
-            if (request.BookForUpdateDto.ImageForUpdate is not null &&
-                request.BookForUpdateDto.ImageForUpdate.Length > 0)
+            if (request.BookForUpdateDto.Image is not null &&
+                request.BookForUpdateDto.Image.Length > 0)
             {
                 var bookForUpdate = _mapper.Map(request.BookForUpdateDto, entity);
 
                 Utility.Utility.DeleteOldBookImage(entity.ImageName!);
 
                 var (created, uniqueImageName) = Utility.Utility
-                    .UploadImage(request.BookForUpdateDto.ImageForUpdate, "Books");
+                    .UploadImage(request.BookForUpdateDto.Image, "Books");
 
                 if (!created)
                     throw new ImageUploadFailedException("Failed to upload book image.");
@@ -50,6 +73,6 @@ public sealed class UpdateBookCommandHandler(
             }
         }
 
-        throw new InvalidOperationException($"Book with ID {request.BookId} not found.");
+        throw new BookNotFoundException($"Book with ID {request.BookId} not found.");
     }
 }

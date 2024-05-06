@@ -13,17 +13,18 @@ public sealed class UpdateBookImageCommandHandler(
         UpdateBookImageCommand request,
         CancellationToken cancellationToken)
     {
-        var booksExists = unitOfWork.BookRepository.Exists(request.BookId);
+        var booksExists = unitOfWork.BookRepository.Exists(request.BookImageForUpdateDto.Id);
         if (!booksExists)
-            throw new BookNotFoundException($"Book with ID {request.BookId} was not founded.");
+            throw new BookNotFoundException($"Book with ID {request.BookImageForUpdateDto.Id} was not founded.");
 
-        var (created, uniqueImageName) = Utility.Utility.UploadImage(request.ImageToUpload, "Books");
+        var (created, uniqueImageName) = Utility.Utility.UploadImage(
+            request.BookImageForUpdateDto.ImageToUpload, "Books");
 
         if (created)
         {
             var book = unitOfWork
                 .BookRepository
-                .FindByCondition(x => x.Id == request.BookId)
+                .FindByCondition(x => x.Id == request.BookImageForUpdateDto.Id)
                 .SingleOrDefault();
 
             if (!string.IsNullOrEmpty(book!.ImageName))

@@ -3,6 +3,7 @@ using BookStore.Application.UseCases.Book.Requests.Commands;
 using BookStore.Application.UseCases.Book.Requests.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace BookStore.Api.Controllers
 {
@@ -15,34 +16,21 @@ namespace BookStore.Api.Controllers
         [ProducesResponseType(typeof(IQueryable<BookWithDetailsDto>), 200)]
         public async Task<ActionResult<IQueryable<BookWithDetailsDto>>> GetAllBooksWithDetails()
         {
-            try
-            {
-                var booksWithDetailsQuery = await Mediator.Send(new GetAllBooksWithDetailsQuery());
-                return Ok(booksWithDetailsQuery);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var booksWithDetailsQuery = await Mediator.Send(new GetAllBooksWithDetailsQuery());
+            return Ok(booksWithDetailsQuery);
         }
 
         [HttpGet("{id}", Name = "GetBookDetail")]
         [ProducesResponseType(typeof(BookWithDetailsDto), 200)]
         public async Task<ActionResult<BookWithDetailsDto>> GetBookWithDetails(int id)
         {
-            try
-            {
-                var bookWithDetailsQuery = await Mediator.Send(new GetBookWithDetailsQuery { Id = id });
-                return Ok(bookWithDetailsQuery);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var bookWithDetailsQuery = await Mediator.Send(new GetBookWithDetailsQuery { Id = id });
+            return Ok(bookWithDetailsQuery);
         }
 
         [HttpPost]
         [ProducesResponseType(typeof(BookWithDetailsDto), 201)]
+        [ProducesResponseType(statusCode: (int)HttpStatusCode.UnprocessableEntity)]
         public async Task<IActionResult> CreateBook([FromForm] BookForCreationDto bookForCreationDto)
         {
             var createdBook = await Mediator.Send(
@@ -54,30 +42,16 @@ namespace BookStore.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> UpdateBook(int id, [FromForm] BookForUpdateDto bookForUpdateDto)
         {
-            try
-            {
-                await Mediator.Send(new UpdateBookCommand { BookId = id, BookForUpdateDto = bookForUpdateDto });
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await Mediator.Send(new UpdateBookCommand { BookId = id, BookForUpdateDto = bookForUpdateDto });
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteBook(int id)
         {
-            try
-            {
-                await Mediator.Send(new DeleteBookCommand { BookId = id });
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await Mediator.Send(new DeleteBookCommand { BookId = id });
+            return NoContent();
         }
 
         [Route("{id}/UpdateBookImage")]

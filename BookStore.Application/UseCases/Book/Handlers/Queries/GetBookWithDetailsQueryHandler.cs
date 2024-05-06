@@ -1,5 +1,6 @@
 ﻿using BookStore.Application.Contracts.Infrastructure;
 using BookStore.Application.Dtos.Book;
+using BookStore.Application.Exceptions;
 using BookStore.Application.UseCases.Book.Requests.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -35,7 +36,7 @@ public sealed class GetBookWithDetailsQueryHandler(
                 PublicationYear = book.PublicationYear,
                 Title = book.Title,
                 ImageUrl = GetImageUrl(baseUrl, book.ImageName)
-            }).SingleOrDefault() ?? throw new InvalidOperationException($"Book with ID {request.Id} not found.");
+            }).SingleOrDefault() ?? throw new BookNotFoundException($"Book with ID {request.Id} not found.");
 
         return Task.FromResult(bookWithDetails);
     }

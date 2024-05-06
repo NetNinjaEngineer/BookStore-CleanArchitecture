@@ -3,6 +3,7 @@ using BookStore.Application.Contracts.Infrastructure;
 using BookStore.Application.Dtos.Book;
 using BookStore.Application.Dtos.Book.Validators;
 using BookStore.Application.Exceptions;
+using BookStore.Application.Helpers;
 using BookStore.Application.UseCases.Book.Requests.Commands;
 using FluentValidation;
 using MediatR;
@@ -20,6 +21,7 @@ public sealed class CreateBookCommandHandler(
         CancellationToken cancellationToken
         )
     {
+
         try
         {
             await new BookForCreationDtoValidator()
@@ -27,19 +29,15 @@ public sealed class CreateBookCommandHandler(
         }
         catch (ValidationException ex)
         {
-            var validationErrors = ex.Errors.Select(e => new
+            var validationErrors = ex.Errors.Select(e => new ValidationError
             {
-                Property = e.PropertyName,
-                Error = e.ErrorMessage,
-                Severity = e.Severity.ToString()
+                PropertyName = e.PropertyName,
+                Value = e.ErrorMessage
             });
 
-            var jsonErrors = JsonSerializer.Serialize(validationErrors, new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
+            var jsonErrors = JsonSerializer.Serialize(validationErrors);
 
-            throw new ValidationException($"Errors: {jsonErrors}");
+            throw new ValidationException(jsonErrors);
         }
 
         var authorExists = unitOfWork
