@@ -10,4 +10,10 @@ public sealed class BookForListDto : BaseDto
     public decimal Price { get; set; }
 
     public string? ImageName { get; set; }
+
+    public IEnumerable<string?> Authors { get; set; } = [];
+
+    public string? Genre { get; set; }
+
+    public string? ImageUrl { get; set; }
 }

@@ -9,9 +9,9 @@ namespace BookStore.Application.UseCases.Book.Handlers.Queries;
 public sealed class GetBookWithDetailsQueryHandler(
     IUnitOfWork unitOfWork,
     IHttpContextAccessor contextAccessor)
-    : IRequestHandler<GetBookWithDetailsQuery, BookWithDetailsDto>
+    : IRequestHandler<GetBookWithDetailsQuery, BookForListDto>
 {
-    public Task<BookWithDetailsDto> Handle(
+    public Task<BookForListDto> Handle(
         GetBookWithDetailsQuery request,
         CancellationToken cancellationToken
         )
@@ -27,14 +27,15 @@ public sealed class GetBookWithDetailsQueryHandler(
             join author in unitOfWork.AuthorRepository.FindAll() on authorBook.AuthorId equals author.Id
             join genre in unitOfWork.GenreRepository.FindAll() on book.GenreId equals genre.GenreId
             where book.Id == request.Id
-            select new BookWithDetailsDto
+            select new BookForListDto
             {
-                BookId = book.Id,
+                Id = book.Id,
                 Authors = book.Authors.Select(x => x.AuthorName),
                 Genre = genre.GenreName,
                 Price = book.Price,
                 PublicationYear = book.PublicationYear,
                 Title = book.Title,
+                ImageName = book.ImageName,
                 ImageUrl = GetImageUrl(baseUrl, book.ImageName)
             }).SingleOrDefault() ?? throw new BookNotFoundException($"Book with ID {request.Id} not found.");
 

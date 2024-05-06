@@ -1,7 +1,11 @@
 ﻿using BookStore.Application.Contracts.Infrastructure;
+using BookStore.Application.Dtos.Book.Validators;
 using BookStore.Application.Exceptions;
+using BookStore.Application.Helpers;
 using BookStore.Application.UseCases.Book.Requests.Commands;
+using FluentValidation;
 using MediatR;
+using System.Text.Json;
 
 namespace BookStore.Application.UseCases.Book.Handlers.Commands;
 public sealed class UpdateBookImageCommandHandler(
@@ -13,9 +17,26 @@ public sealed class UpdateBookImageCommandHandler(
         UpdateBookImageCommand request,
         CancellationToken cancellationToken)
     {
-        var booksExists = unitOfWork.BookRepository.Exists(request.BookImageForUpdateDto.Id);
+        try
+        {
+            await new BookImageForUpdateDtoValidator()
+                .ValidateAndThrowAsync(request.BookImageForUpdateDto, cancellationToken: cancellationToken);
+
+        }
+        catch (ValidationException ex)
+        {
+            var validationErrors = ex.Errors.Select(x => new ValidationError
+            {
+                PropertyName = x.PropertyName,
+                Value = x.ErrorMessage
+            });
+
+            throw new ValidationException(JsonSerializer.Serialize(validationErrors));
+        }
+
+        var booksExists = unitOfWork.BookRepository.Exists(request.BookId);
         if (!booksExists)
-            throw new BookNotFoundException($"Book with ID {request.BookImageForUpdateDto.Id} was not founded.");
+            throw new BookNotFoundException($"Book with ID {request.BookId} was not founded.");
 
         var (created, uniqueImageName) = Utility.Utility.UploadImage(
             request.BookImageForUpdateDto.ImageToUpload, "Books");
@@ -24,7 +45,7 @@ public sealed class UpdateBookImageCommandHandler(
         {
             var book = unitOfWork
                 .BookRepository
-                .FindByCondition(x => x.Id == request.BookImageForUpdateDto.Id)
+                .FindByCondition(x => x.Id == request.BookId)
                 .SingleOrDefault();
 
             if (!string.IsNullOrEmpty(book!.ImageName))

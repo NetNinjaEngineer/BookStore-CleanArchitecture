@@ -1,8 +1,7 @@
-﻿using BookStore.Application.Dtos.Common;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace BookStore.Application.Dtos.Book;
-public sealed class BookImageForUpdateDto : BaseDto
+public sealed class BookImageForUpdateDto
 {
     public required IFormFile ImageToUpload { get; set; }
 }

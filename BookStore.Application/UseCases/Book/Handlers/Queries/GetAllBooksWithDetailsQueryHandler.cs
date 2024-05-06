@@ -8,9 +8,9 @@ namespace BookStore.Application.UseCases.Book.Handlers.Queries;
 public sealed class GetAllBooksWithDetailsQueryHandler(
     IUnitOfWork unitOfWork,
     IHttpContextAccessor? contextAccessor)
-        : IRequestHandler<GetAllBooksWithDetailsQuery, IQueryable<BookWithDetailsDto>>
+        : IRequestHandler<GetAllBooksWithDetailsQuery, IQueryable<BookForListDto>>
 {
-    public Task<IQueryable<BookWithDetailsDto>> Handle(
+    public Task<IQueryable<BookForListDto>> Handle(
         GetAllBooksWithDetailsQuery request,
         CancellationToken cancellationToken
         )
@@ -22,15 +22,16 @@ public sealed class GetAllBooksWithDetailsQueryHandler(
 
         var booksWithDetails = unitOfWork.BookRepository
             .FindAll(book => book.Genre, book => book.Authors)
-            .Select(book => new BookWithDetailsDto
+            .Select(book => new BookForListDto
             {
-                BookId = book.Id,
+                Id = book.Id,
                 Title = book.Title,
                 Price = book.Price,
                 PublicationYear = book.PublicationYear,
                 Genre = book.Genre.GenreName,
                 Authors = book.Authors.Select(x => x.AuthorName),
-                ImageUrl = GetImageUrl(book, baseUrl)
+                ImageUrl = GetImageUrl(book, baseUrl),
+                ImageName = book.ImageName
             });
 
         return Task.FromResult(booksWithDetails);

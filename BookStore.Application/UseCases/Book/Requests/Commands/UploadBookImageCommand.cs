@@ -4,5 +4,6 @@ using MediatR;
 namespace BookStore.Application.UseCases.Book.Requests.Commands;
 public sealed class UpdateBookImageCommand : IRequest<Unit>
 {
-    public required BookImageForUpdateDto BookImageForUpdateDto { get; set; }
+    public required int BookId { get; set; }
+    public BookImageForUpdateDto BookImageForUpdateDto { get; set; }
 }

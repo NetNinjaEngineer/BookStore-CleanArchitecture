@@ -13,23 +13,23 @@ namespace BookStore.Api.Controllers
         public IMediator Mediator { get; } = mediator;
 
         [HttpGet]
-        [ProducesResponseType(typeof(IQueryable<BookWithDetailsDto>), 200)]
-        public async Task<ActionResult<IQueryable<BookWithDetailsDto>>> GetAllBooksWithDetails()
+        [ProducesResponseType(typeof(IQueryable<BookForListDto>), 200)]
+        public async Task<ActionResult<IQueryable<BookForListDto>>> GetAllBooksWithDetails()
         {
             var booksWithDetailsQuery = await Mediator.Send(new GetAllBooksWithDetailsQuery());
             return Ok(booksWithDetailsQuery);
         }
 
         [HttpGet("{id}", Name = "GetBookDetail")]
-        [ProducesResponseType(typeof(BookWithDetailsDto), 200)]
-        public async Task<ActionResult<BookWithDetailsDto>> GetBookWithDetails(int id)
+        [ProducesResponseType(typeof(BookForListDto), 200)]
+        public async Task<ActionResult<BookForListDto>> GetBookWithDetails(int id)
         {
             var bookWithDetailsQuery = await Mediator.Send(new GetBookWithDetailsQuery { Id = id });
             return Ok(bookWithDetailsQuery);
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(BookWithDetailsDto), 201)]
+        [ProducesResponseType(typeof(BookForListDto), 201)]
         [ProducesResponseType(statusCode: (int)HttpStatusCode.UnprocessableEntity)]
         public async Task<IActionResult> CreateBook([FromForm] BookForCreationDto bookForCreationDto)
         {
@@ -57,17 +57,10 @@ namespace BookStore.Api.Controllers
         [Route("{id}/UpdateBookImage")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> UpdateBookImage(int id, IFormFile image)
+        public async Task<IActionResult> UpdateBookImage(int id, [FromForm] BookImageForUpdateDto request)
         {
-            try
-            {
-                await Mediator.Send(new UpdateBookImageCommand { BookId = id, ImageToUpload = image });
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await Mediator.Send(new UpdateBookImageCommand { BookId = id, BookImageForUpdateDto = request });
+            return NoContent();
         }
 
     }

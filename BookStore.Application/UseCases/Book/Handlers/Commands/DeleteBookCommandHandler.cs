@@ -21,6 +21,9 @@ public sealed class DeleteBookCommandHandler(
             ?? throw new BookNotFoundException($"Book with ID {request.BookId} was not found.");
 
         unitOfWork.BookRepository.Delete(bookEntity);
+
+        Utility.Utility.DeleteOldBookImage(bookEntity.ImageName!);
+
         await unitOfWork.SaveChangesAsync();
         return Unit.Value;
     }

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace BookStore.Application.UseCases.Book.Requests.Queries;
 public sealed class GetBookWithDetailsQuery
-    : IRequest<BookWithDetailsDto>
+    : IRequest<BookForListDto>
 {
     public required int Id { get; set; }
 }
