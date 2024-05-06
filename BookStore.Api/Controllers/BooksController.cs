@@ -45,16 +45,9 @@ namespace BookStore.Api.Controllers
         [ProducesResponseType(typeof(BookWithDetailsDto), 201)]
         public async Task<IActionResult> CreateBook([FromForm] BookForCreationDto bookForCreationDto)
         {
-            try
-            {
-                var createdBook = await Mediator.Send(
-                    new CreateBookCommand { BookForCreationDto = bookForCreationDto });
-                return CreatedAtRoute("GetBookDetail", new { id = createdBook.Id }, createdBook);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var createdBook = await Mediator.Send(
+                     new CreateBookCommand { BookForCreationDto = bookForCreationDto });
+            return CreatedAtRoute("GetBookDetail", new { id = createdBook.Id }, createdBook);
         }
 
         [HttpPut("{id}")]

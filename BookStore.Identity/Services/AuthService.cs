@@ -121,7 +121,7 @@ public class AuthService(UserManager<ApplicationUser> userManager, RoleManager<I
             issuer: _configuration["JwtSettings:ValidIssuer"],
             audience: _configuration["JwtSettings:ValidAudience"],
             claims: claims,
-            expires: DateTime.Now.AddHours(1),
+            expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: signingCredentials
         );
 

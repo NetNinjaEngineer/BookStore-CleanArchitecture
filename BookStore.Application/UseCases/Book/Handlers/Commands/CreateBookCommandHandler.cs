@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using BookStore.Application.Contracts.Infrastructure;
 using BookStore.Application.Dtos.Book;
+using BookStore.Application.Dtos.Book.Validators;
 using BookStore.Application.Exceptions;
 using BookStore.Application.UseCases.Book.Requests.Commands;
+using FluentValidation;
 using MediatR;
+using System.Text.Json;
 
 namespace BookStore.Application.UseCases.Book.Handlers.Commands;
 public sealed class CreateBookCommandHandler(
@@ -17,6 +20,28 @@ public sealed class CreateBookCommandHandler(
         CancellationToken cancellationToken
         )
     {
+        try
+        {
+            await new BookForCreationDtoValidator()
+                .ValidateAndThrowAsync(request.BookForCreationDto, cancellationToken);
+        }
+        catch (ValidationException ex)
+        {
+            var validationErrors = ex.Errors.Select(e => new
+            {
+                Property = e.PropertyName,
+                Error = e.ErrorMessage,
+                Severity = e.Severity.ToString()
+            });
+
+            var jsonErrors = JsonSerializer.Serialize(validationErrors, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+            throw new ValidationException($"Errors: {jsonErrors}");
+        }
+
         var authorExists = unitOfWork
             .AuthorRepository
             .AuthorExists(request.BookForCreationDto.AuthorId);
