@@ -22,6 +22,7 @@ namespace BookStore.Api.Controllers
 
         [HttpGet("{id}", Name = "GetBookDetail")]
         [ProducesResponseType(typeof(BookForListDto), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<BookForListDto>> GetBookWithDetails(int id)
         {
             var bookWithDetailsQuery = await Mediator.Send(new GetBookWithDetailsQuery { Id = id });

@@ -6,6 +6,9 @@ public static class ApiRegisterationServices
 {
     public static IServiceCollection RegisterApiServices(this IServiceCollection services)
     {
+
+        //builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
         services.AddSwaggerGen(options =>
         {
             options.AddSecurityDefinition("BookStoreApp", new OpenApiSecurityScheme()

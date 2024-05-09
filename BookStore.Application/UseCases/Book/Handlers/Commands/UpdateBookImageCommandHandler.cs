@@ -1,11 +1,9 @@
 ﻿using BookStore.Application.Contracts.Infrastructure;
 using BookStore.Application.Dtos.Book.Validators;
 using BookStore.Application.Exceptions;
-using BookStore.Application.Helpers;
 using BookStore.Application.UseCases.Book.Requests.Commands;
 using FluentValidation;
 using MediatR;
-using System.Text.Json;
 
 namespace BookStore.Application.UseCases.Book.Handlers.Commands;
 public sealed class UpdateBookImageCommandHandler(
@@ -17,22 +15,8 @@ public sealed class UpdateBookImageCommandHandler(
         UpdateBookImageCommand request,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            await new BookImageForUpdateDtoValidator()
+        await new BookImageForUpdateDtoValidator()
                 .ValidateAndThrowAsync(request.BookImageForUpdateDto, cancellationToken: cancellationToken);
-
-        }
-        catch (ValidationException ex)
-        {
-            var validationErrors = ex.Errors.Select(x => new ValidationError
-            {
-                PropertyName = x.PropertyName,
-                Value = x.ErrorMessage
-            });
-
-            throw new ValidationException(JsonSerializer.Serialize(validationErrors));
-        }
 
         var booksExists = unitOfWork.BookRepository.Exists(request.BookId);
         if (!booksExists)

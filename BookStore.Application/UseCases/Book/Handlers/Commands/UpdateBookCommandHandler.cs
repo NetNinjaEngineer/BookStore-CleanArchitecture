@@ -2,11 +2,9 @@
 using BookStore.Application.Contracts.Infrastructure;
 using BookStore.Application.Dtos.Book.Validators;
 using BookStore.Application.Exceptions;
-using BookStore.Application.Helpers;
 using BookStore.Application.UseCases.Book.Requests.Commands;
 using FluentValidation;
 using MediatR;
-using System.Text.Json;
 
 namespace BookStore.Application.UseCases.Book.Handlers.Commands;
 public sealed class UpdateBookCommandHandler(
@@ -26,23 +24,8 @@ public sealed class UpdateBookCommandHandler(
         )
     {
 
-        try
-        {
-            await new BookForUpdateDtoValidator()
+        await new BookForUpdateDtoValidator()
                 .ValidateAndThrowAsync(request.BookForUpdateDto, cancellationToken);
-        }
-        catch (ValidationException ex)
-        {
-            var validationErrors = ex.Errors.Select(e => new ValidationError
-            {
-                PropertyName = e.PropertyName,
-                Value = e.ErrorMessage
-            });
-
-            var jsonErrors = JsonSerializer.Serialize(validationErrors);
-
-            throw new ValidationException(jsonErrors);
-        }
 
         // check if there is a book with the requested id
         var entity = _unitOfWork.BookRepository
