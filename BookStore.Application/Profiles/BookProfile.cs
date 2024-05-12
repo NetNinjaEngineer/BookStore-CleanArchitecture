@@ -8,9 +8,9 @@ public class BookProfile : Profile
 {
     public BookProfile()
     {
-        CreateMap<Book, BookDto>().ReverseMap();
-        CreateMap<Book, BookForCreationDto>().ReverseMap();
-        CreateMap<Book, BookForUpdateDto>().ReverseMap();
-        CreateMap<Book, BookForListDto>().ReverseMap();
+        CreateMap<Book, BookDto>();
+        CreateMap<Book, BookForCreationDto>();
+        CreateMap<Book, BookForUpdateDto>();
+        CreateMap<Book, BookForListDto>();
     }
 }

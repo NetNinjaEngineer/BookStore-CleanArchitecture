@@ -2,7 +2,7 @@
 using MediatR;
 
 namespace BookStore.Application.UseCases.Book.Requests.Queries;
-public sealed class GetAllBooksWithDetailsQuery
-    : IRequest<IEnumerable<BookForListDto>>
+public sealed class SearchBooksQuery : IRequest<IEnumerable<BookForListDto>>
 {
+    public string? SearchTerm { get; set; }
 }

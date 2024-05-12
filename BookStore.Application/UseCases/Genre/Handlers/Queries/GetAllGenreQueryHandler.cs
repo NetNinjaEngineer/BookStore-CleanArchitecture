@@ -9,9 +9,9 @@ public sealed class GetAllGenreQueryHandler(
     IUnitOfWork unitOfWork,
     IMapper mapper
 )
-: IRequestHandler<GetAllGenreQuery, IQueryable<GenreForListDto>>
+: IRequestHandler<GetAllGenreQuery, IEnumerable<GenreForListDto>>
 {
-    public Task<IQueryable<GenreForListDto>> Handle(
+    public Task<IEnumerable<GenreForListDto>> Handle(
         GetAllGenreQuery request,
         CancellationToken cancellationToken)
     {

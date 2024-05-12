@@ -23,18 +23,10 @@ namespace BookStore.Persistence.Repositories
 
         public void Delete(T entity) => _dbSet.Remove(entity);
 
-        public IQueryable<T> FindAll(params Expression<Func<T, object>>[] includes)
-        {
-            IQueryable<T> query = _dbSet;
+        public IEnumerable<T> FindAll(params Expression<Func<T, object>>[] includes)
+            => _dbContext.Set<T>();
 
-            foreach (var include in includes)
-                query = query.Include(include);
-
-            return query;
-
-        }
-
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> condition, params Expression<Func<T, object>>[] includes)
+        public IEnumerable<T> FindByCondition(Expression<Func<T, bool>> condition, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _dbSet;
             foreach (var include in includes)

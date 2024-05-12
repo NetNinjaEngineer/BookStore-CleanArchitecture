@@ -3,6 +3,8 @@
 namespace BookStore.Application.Utility;
 public static class Utility
 {
+    private static readonly string _baseUrl = "https://localhost:7035";
+
     public static (bool, string) UploadImage(IFormFile requestedImage, string folderName)
     {
         if (requestedImage.Length > 0 && requestedImage != null)
@@ -30,4 +32,7 @@ public static class Utility
         }
         return false;
     }
+
+    public static string GetImageUrl(string imageName)
+        => Path.Combine(_baseUrl, $"Files/Images/Books/{imageName}");
 }

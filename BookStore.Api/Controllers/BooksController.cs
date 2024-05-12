@@ -64,5 +64,11 @@ namespace BookStore.Api.Controllers
             return NoContent();
         }
 
+        [HttpPost]
+        [Route("Search")]
+        public async Task<IActionResult> SearchBooks([FromQuery] string searchTerm)
+        {
+            return Ok(await Mediator.Send(new SearchBooksQuery { SearchTerm = searchTerm }));
+        }
     }
 }

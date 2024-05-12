@@ -1,4 +1,5 @@
 ﻿using BookStore.Application.Dtos.Author;
+using BookStore.Application.Dtos.AuthorBooks;
 using BookStore.Application.Dtos.Common;
 using BookStore.Application.Dtos.Genre;
 
@@ -15,6 +16,8 @@ namespace BookStore.Application.Dtos.Book
         public string? ImageName { get; set; }
 
         public ICollection<AuthorDto> Authors { get; set; } = [];
+
+        public ICollection<AuthorBooksDto> AuthorBooks { get; set; } = [];
 
         public int GenreId { get; set; }
 

@@ -3,6 +3,6 @@ using MediatR;
 
 namespace BookStore.Application.UseCases.Author.Requests.Queries;
 public sealed class GetAuthorsWithDetailsQuery
-    : IRequest<IQueryable<GetAuthorsWithDetailsResponse>>
+    : IRequest<IEnumerable<GetAuthorsWithDetailsResponse>>
 {
 }

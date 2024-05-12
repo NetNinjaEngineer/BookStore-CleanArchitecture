@@ -7,9 +7,9 @@ namespace BookStore.Application.UseCases.Author.Handlers.Queries;
 public sealed class GetAuthorsWithDetailsHandler(
     IUnitOfWork unitOfWork
     )
-    : IRequestHandler<GetAuthorsWithDetailsQuery, IQueryable<GetAuthorsWithDetailsResponse>>
+    : IRequestHandler<GetAuthorsWithDetailsQuery, IEnumerable<GetAuthorsWithDetailsResponse>>
 {
-    public Task<IQueryable<GetAuthorsWithDetailsResponse>> Handle(
+    public Task<IEnumerable<GetAuthorsWithDetailsResponse>> Handle(
         GetAuthorsWithDetailsQuery request,
         CancellationToken cancellationToken)
     {
