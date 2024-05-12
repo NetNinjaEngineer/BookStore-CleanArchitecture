@@ -6,7 +6,7 @@ namespace BookStore.Persistence.Repositories
     public class GenericRepository<T>(ApplicationDbContext dbContext)
         : IGenericRepository<T> where T : class, new()
     {
-        private readonly ApplicationDbContext _dbContext = dbContext;
+        protected readonly ApplicationDbContext _dbContext = dbContext;
 
         public async Task<IEnumerable<T>> FindAll()
             => await _dbContext.Set<T>().ToListAsync();

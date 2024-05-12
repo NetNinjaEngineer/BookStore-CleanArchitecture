@@ -7,5 +7,7 @@ namespace BookStore.Application.Contracts.Infrastructure
     {
         bool Exists(int bookId);
         Task<IEnumerable<Book>> GetAllWithSpecifications(GetAllBooksWithGenreAndAuthorsSpecification spec);
+        Task<Book> GetBookByIdWithSpecification(GetBookByIdWithDetailsSpecification spec);
+        Task<IEnumerable<Book>> SearchBooksWithSpecification(SearchBooksSpecification spec);
     }
 }

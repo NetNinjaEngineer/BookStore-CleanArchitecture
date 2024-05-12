@@ -7,5 +7,5 @@ public sealed class GenreRepository(ApplicationDbContext dbContext)
     IGenreRepository
 {
     public bool GenreExists(int genreId)
-        => dbContext.Genres.Any(x => x.Id == genreId);
+        => _dbContext.Genres.Any(x => x.Id == genreId);
 }

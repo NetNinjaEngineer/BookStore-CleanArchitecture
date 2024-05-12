@@ -11,6 +11,9 @@ public class BookProfile : Profile
         CreateMap<Book, BookDto>();
         CreateMap<Book, BookForCreationDto>();
         CreateMap<Book, BookForUpdateDto>();
-        CreateMap<Book, BookForListDto>();
+        CreateMap<Book, BookForListDto>()
+            .ForMember(x => x.Genre, mappingOptions => mappingOptions.MapFrom(b => b.Genre.GenreName))
+            .ForMember(x => x.Authors, mappingOptions => mappingOptions.MapFrom(b => b.Authors.Select(a => a.AuthorName)))
+            .ForMember(x => x.ImageUrl, mappingOptions => mappingOptions.MapFrom(x => Utility.Utility.GetImageUrl(x.ImageName!)));
     }
 }
