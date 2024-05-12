@@ -1,13 +1,8 @@
-﻿using System.Linq.Expressions;
-
-namespace BookStore.Application.Contracts.Infrastructure
+﻿namespace BookStore.Application.Contracts.Infrastructure
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<T> where T : class, new()
     {
-        IEnumerable<T> FindAll(params Expression<Func<T, object>>[] includes);
-
-        IEnumerable<T> FindByCondition(Expression<Func<T, bool>> condition,
-            params Expression<Func<T, object>>[] includes);
+        Task<IEnumerable<T>> FindAll();
 
         T Create(T entity);
 

@@ -7,8 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BookStore.Persistence.Repositories
 {
     public sealed class BookRepository(ApplicationDbContext dbContext)
-        : GenericRepository<Book>(dbContext),
-        IBookRepository
+        : GenericRepository<Book>(dbContext), IBookRepository
     {
         public bool Exists(int bookId)
             => dbContext.Books.Any(x => x.Id == bookId);

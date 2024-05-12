@@ -18,7 +18,7 @@ public static class SpecificationQueryBuilder
 
         if (specification.Includes is not null)
         {
-            query = specification.Includes.Aggregate(query, (current, include) => query.Include(include));
+            query = specification.Includes.Aggregate(query, (current, include) => current.Include(include));
         }
 
         if (specification.OrderBy is not null)

@@ -8,8 +8,8 @@ public sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
 {
     public void Configure(EntityTypeBuilder<Genre> builder)
     {
-        builder.HasKey(x => x.GenreId);
-        builder.Property(x => x.GenreId).ValueGeneratedOnAdd();
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
         builder.Property(x => x.GenreName)
             .HasColumnType("varchar").HasMaxLength(50)

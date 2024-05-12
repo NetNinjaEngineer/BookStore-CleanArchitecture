@@ -1,39 +1,24 @@
 ﻿using BookStore.Application.Contracts.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace BookStore.Persistence.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T>(ApplicationDbContext dbContext)
+        : IGenericRepository<T> where T : class, new()
     {
-        private readonly ApplicationDbContext _dbContext;
-        private readonly DbSet<T> _dbSet;
+        private readonly ApplicationDbContext _dbContext = dbContext;
 
-        public GenericRepository(ApplicationDbContext dbContext)
-        {
-            _dbContext = dbContext;
-            _dbSet = _dbContext.Set<T>();
-        }
+        public async Task<IEnumerable<T>> FindAll()
+            => await _dbContext.Set<T>().ToListAsync();
 
         public T Create(T entity)
         {
-            _dbSet.Add(entity);
+            _dbContext.Set<T>().Add(entity);
             return entity;
         }
 
-        public void Delete(T entity) => _dbSet.Remove(entity);
+        public void Update(T entity) => _dbContext.Set<T>().Update(entity);
 
-        public IEnumerable<T> FindAll(params Expression<Func<T, object>>[] includes)
-            => _dbContext.Set<T>();
-
-        public IEnumerable<T> FindByCondition(Expression<Func<T, bool>> condition, params Expression<Func<T, object>>[] includes)
-        {
-            IQueryable<T> query = _dbSet;
-            foreach (var include in includes)
-                query = query.Include(include);
-            return query.Where(condition);
-        }
-
-        public void Update(T entity) => _dbSet.Update(entity);
+        public void Delete(T entity) => _dbContext.Set<T>().Remove(entity);
     }
 }

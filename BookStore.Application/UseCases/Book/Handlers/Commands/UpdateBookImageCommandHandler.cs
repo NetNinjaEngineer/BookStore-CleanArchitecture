@@ -1,47 +1,47 @@
-﻿using BookStore.Application.Contracts.Infrastructure;
-using BookStore.Application.Dtos.Book.Validators;
-using BookStore.Application.Exceptions;
-using BookStore.Application.UseCases.Book.Requests.Commands;
-using FluentValidation;
-using MediatR;
+﻿//using BookStore.Application.Contracts.Infrastructure;
+//using BookStore.Application.Dtos.Book.Validators;
+//using BookStore.Application.Exceptions;
+//using BookStore.Application.UseCases.Book.Requests.Commands;
+//using FluentValidation;
+//using MediatR;
 
-namespace BookStore.Application.UseCases.Book.Handlers.Commands;
-public sealed class UpdateBookImageCommandHandler(
-        IUnitOfWork unitOfWork
-    )
-    : IRequestHandler<UpdateBookImageCommand, Unit>
-{
-    public async Task<Unit> Handle(
-        UpdateBookImageCommand request,
-        CancellationToken cancellationToken)
-    {
-        await new BookImageForUpdateDtoValidator()
-                .ValidateAndThrowAsync(request.BookImageForUpdateDto, cancellationToken: cancellationToken);
+//namespace BookStore.Application.UseCases.Book.Handlers.Commands;
+//public sealed class UpdateBookImageCommandHandler(
+//        IUnitOfWork unitOfWork
+//    )
+//    : IRequestHandler<UpdateBookImageCommand, Unit>
+//{
+//    public async Task<Unit> Handle(
+//        UpdateBookImageCommand request,
+//        CancellationToken cancellationToken)
+//    {
+//        await new BookImageForUpdateDtoValidator()
+//                .ValidateAndThrowAsync(request.BookImageForUpdateDto, cancellationToken: cancellationToken);
 
-        var booksExists = unitOfWork.BookRepository.Exists(request.BookId);
-        if (!booksExists)
-            throw new BookNotFoundException($"Book with ID {request.BookId} was not founded.");
+//        var booksExists = unitOfWork.BookRepository.Exists(request.BookId);
+//        if (!booksExists)
+//            throw new BookNotFoundException($"Book with ID {request.BookId} was not founded.");
 
-        var (created, uniqueImageName) = Utility.Utility.UploadImage(
-            request.BookImageForUpdateDto.ImageToUpload, "Books");
+//        var (created, uniqueImageName) = Utility.Utility.UploadImage(
+//            request.BookImageForUpdateDto.ImageToUpload, "Books");
 
-        if (created)
-        {
-            var book = unitOfWork
-                .BookRepository
-                .FindByCondition(x => x.Id == request.BookId)
-                .SingleOrDefault();
+//        if (created)
+//        {
+//            var book = unitOfWork
+//                .BookRepository
+//                .FindByCondition(x => x.Id == request.BookId)
+//                .SingleOrDefault();
 
-            if (!string.IsNullOrEmpty(book!.ImageName))
-                Utility.Utility.DeleteOldBookImage(book.ImageName);
+//            if (!string.IsNullOrEmpty(book!.ImageName))
+//                Utility.Utility.DeleteOldBookImage(book.ImageName);
 
-            book!.ImageName = uniqueImageName;
+//            book!.ImageName = uniqueImageName;
 
-            await unitOfWork.SaveChangesAsync();
+//            await unitOfWork.SaveChangesAsync();
 
-            return Unit.Value;
-        }
+//            return Unit.Value;
+//        }
 
-        throw new ImageUploadFailedException("Image Upload Faild.");
-    }
-}
+//        throw new ImageUploadFailedException("Image Upload Faild.");
+//    }
+//}
