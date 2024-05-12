@@ -23,7 +23,10 @@ namespace BookStore.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Book> GetBookByIdWithSpecification(GetBookByIdWithDetailsSpecification spec)
+        public async Task<Book?> GetBookByIdAsync(int bookId)
+            => await _dbContext.Books.FindAsync(bookId);
+
+        public async Task<Book?> GetBookByIdWithSpecification(GetBookByIdWithDetailsSpecification spec)
             => await SpecificationQueryBuilder.GetQuery(_dbContext.Books, spec).FirstOrDefaultAsync();
 
         public async Task<IEnumerable<Book>> SearchBooksWithSpecification(SearchBooksSpecification spec)
