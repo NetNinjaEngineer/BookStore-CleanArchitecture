@@ -1,26 +1,25 @@
-﻿//using BookStore.Application.Contracts.Infrastructure;
-//using BookStore.Application.Responses;
-//using BookStore.Application.UseCases.Author.Requests.Queries;
-//using MediatR;
+﻿using AutoMapper;
+using BookStore.Application.Contracts.Infrastructure;
+using BookStore.Application.Responses;
+using BookStore.Application.Specifications.Features.Author;
+using BookStore.Application.UseCases.Author.Requests.Queries;
+using MediatR;
 
-//namespace BookStore.Application.UseCases.Author.Handlers.Queries;
-//public sealed class GetAuthorsWithDetailsHandler(
-//    IUnitOfWork unitOfWork
-//    )
-//    : IRequestHandler<GetAuthorsWithDetailsQuery, IEnumerable<GetAuthorsWithDetailsResponse>>
-//{
-//    public Task<IEnumerable<GetAuthorsWithDetailsResponse>> Handle(
-//        GetAuthorsWithDetailsQuery request,
-//        CancellationToken cancellationToken)
-//    {
-//        var authorsWithDetailsResponse = unitOfWork.AuthorRepository
-//            .FindAll(x => x.AuthorBooks, x => x.Books)
-//            .Select(x => new GetAuthorsWithDetailsResponse
-//            {
-//                Author = x.AuthorName,
-//                Books = x.Books.Select(book => book.Title!)
-//            });
+namespace BookStore.Application.UseCases.Author.Handlers.Queries;
+public sealed class GetAuthorsWithDetailsHandler(
+    IUnitOfWork unitOfWork,
+    IMapper mapper)
+    : IRequestHandler<GetAuthorsWithDetailsQuery, IEnumerable<GetAuthorsWithDetailsResponse>>
+{
+    public async Task<IEnumerable<GetAuthorsWithDetailsResponse>> Handle(
+        GetAuthorsWithDetailsQuery request,
+        CancellationToken cancellationToken)
+    {
+        var response = await unitOfWork
+            .AuthorRepository
+            .GetAuthorsWithDetailsSpecification(
+                new GetAllAuthorsWithBooksAndAuthorBooksSpecification());
 
-//        return Task.FromResult(authorsWithDetailsResponse);
-//    }
-//}
+        return mapper.Map<IEnumerable<GetAuthorsWithDetailsResponse>>(response);
+    }
+}

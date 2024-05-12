@@ -9,8 +9,8 @@ public class BookProfile : Profile
     public BookProfile()
     {
         CreateMap<Book, BookDto>();
-        CreateMap<Book, BookForCreationDto>();
-        CreateMap<Book, BookForUpdateDto>();
+        CreateMap<BookForCreationDto, Book>();
+        CreateMap<BookForUpdateDto, Book>();
         CreateMap<Book, BookForListDto>()
             .ForMember(x => x.Genre, mappingOptions => mappingOptions.MapFrom(b => b.Genre.GenreName))
             .ForMember(x => x.Authors, mappingOptions => mappingOptions.MapFrom(b => b.Authors.Select(a => a.AuthorName)))

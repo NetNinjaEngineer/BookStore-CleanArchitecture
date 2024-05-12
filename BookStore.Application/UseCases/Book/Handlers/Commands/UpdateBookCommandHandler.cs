@@ -36,9 +36,9 @@ public sealed class UpdateBookCommandHandler(
             if (request.BookForUpdateDto.Image is not null &&
                 request.BookForUpdateDto.Image.Length > 0)
             {
-                var bookForUpdate = _mapper.Map(request.BookForUpdateDto, entity);
-
                 Utility.Utility.DeleteOldBookImage(entity.ImageName!);
+
+                var bookForUpdate = _mapper.Map(request.BookForUpdateDto, entity);
 
                 var (created, uniqueImageName) = Utility.Utility
                     .UploadImage(request.BookForUpdateDto.Image, "Books");

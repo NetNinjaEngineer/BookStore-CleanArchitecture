@@ -10,13 +10,13 @@ public sealed class GetAuthorsQueryHandler(
   IMapper mapper)
   : IRequestHandler<GetAuthorsQuery, List<AuthorForListDto>>
 {
-  public Task<List<AuthorForListDto>> Handle(
-    GetAuthorsQuery request,
-    CancellationToken cancellationToken
-    )
-  {
-    var allAuthors = unitOfWork.AuthorRepository.FindAll();
-    var mappedAuthors = mapper.Map<List<AuthorForListDto>>(allAuthors);
-    return Task.FromResult(mappedAuthors);
-  }
+    public async Task<List<AuthorForListDto>> Handle(
+      GetAuthorsQuery request,
+      CancellationToken cancellationToken
+      )
+    {
+        var allAuthors = await unitOfWork.AuthorRepository.FindAll();
+        var mappedAuthors = mapper.Map<List<AuthorForListDto>>(allAuthors);
+        return mappedAuthors;
+    }
 }
