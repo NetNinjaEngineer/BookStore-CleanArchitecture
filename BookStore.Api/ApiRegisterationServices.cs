@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 namespace BookStore.Api;
 
@@ -24,7 +25,7 @@ public static class ApiRegisterationServices
             options.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status406NotAcceptable));
             options.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status500InternalServerError));
             options.OutputFormatters.RemoveType<StringOutputFormatter>();
-        });
+        }).AddJsonOptions(opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
