@@ -8,7 +8,7 @@ public class BookProfile : Profile
 {
     public BookProfile()
     {
-        CreateMap<Book, BookDto>();
+        CreateMap<Book, BookDto>().ReverseMap();
         CreateMap<BookForCreationDto, Book>();
         CreateMap<BookForUpdateDto, Book>();
         CreateMap<Book, BookForListDto>()

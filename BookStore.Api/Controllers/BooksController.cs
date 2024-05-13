@@ -70,5 +70,12 @@ namespace BookStore.Api.Controllers
         {
             return Ok(await Mediator.Send(new SearchBooksQuery { SearchTerm = searchTerm }));
         }
+
+        [HttpGet]
+        [Route("getAllWithSpec")]
+        public async Task<IActionResult> GetAllWithSpec()
+        {
+            return Ok(await Mediator.Send(new GetAllWithSpecificationQuery()));
+        }
     }
 }

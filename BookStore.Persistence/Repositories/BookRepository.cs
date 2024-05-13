@@ -15,6 +15,12 @@ namespace BookStore.Persistence.Repositories
         public bool Exists(int bookId)
             => _dbContext.Books.Any(x => x.Id == bookId);
 
+        public async Task<IEnumerable<Book>> GetAllWithSpec(
+            GetAllBooksWithGenreAndAuthorsSpecification spec)
+        {
+            return await SpecificationQueryBuilder.GetQuery(_dbContext.Books, spec).ToListAsync();
+        }
+
         public async Task<IEnumerable<Book>> GetAllWithSpecifications(
             GetAllBooksWithGenreAndAuthorsSpecification spec)
         {

@@ -10,5 +10,7 @@ namespace BookStore.Application.Contracts.Infrastructure
         Task<IEnumerable<Book>> GetAllWithSpecifications(GetAllBooksWithGenreAndAuthorsSpecification spec);
         Task<Book?> GetBookByIdWithSpecification(GetBookByIdWithDetailsSpecification spec);
         Task<IEnumerable<Book>> SearchBooksWithSpecification(SearchBooksSpecification spec);
+        Task<IEnumerable<Book>> GetAllWithSpec(GetAllBooksWithGenreAndAuthorsSpecification spec);
+
     }
 }

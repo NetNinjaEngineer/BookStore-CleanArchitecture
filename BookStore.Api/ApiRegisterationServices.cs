@@ -1,13 +1,38 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using BookStore.Application;
+using BookStore.Identity;
+using BookStore.Persistence;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.OpenApi.Models;
 
 namespace BookStore.Api;
 
 public static class ApiRegisterationServices
 {
-    public static IServiceCollection RegisterApiServices(this IServiceCollection services)
+    public static IServiceCollection RegisterApiServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
 
         //builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+        services.AddControllers(options =>
+        {
+            options.Filters.Add(new AuthorizeFilter());
+            options.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status400BadRequest));
+            options.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status406NotAcceptable));
+            options.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status500InternalServerError));
+            options.OutputFormatters.RemoveType<StringOutputFormatter>();
+        });
+
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
+        services.RegisterPersistenceServices(configuration);
+        services.RegisterApplicationServices();
+        services.RegisterIdentityServices(configuration);
+        services.AddHttpContextAccessor();
+        services.AddCors();
 
         services.AddSwaggerGen(options =>
         {

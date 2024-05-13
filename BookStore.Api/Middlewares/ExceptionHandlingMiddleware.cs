@@ -57,6 +57,9 @@ public class ExceptionHandlingMiddleware
                 statusCode = HttpStatusCode.BadRequest;
                 response.Message = ex.Message;
                 break;
+            default:
+                response.Message = ex.Message;
+                break;
         }
 
         var jsonResponse = JsonSerializer.Serialize(response);
