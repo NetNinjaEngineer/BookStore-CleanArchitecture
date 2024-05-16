@@ -41,10 +41,13 @@ public class AuthService(
         var userRoles = await _userManager.GetRolesAsync(user);
 
         authModel.IsAuthenticated = true;
+        authModel.UserName = user.UserName;
         authModel.Roles = [.. userRoles];
         authModel.ExpiresOn = securityJwtToken.ValidTo;
         authModel.Email = model.Email;
         authModel.Token = new JwtSecurityTokenHandler().WriteToken(securityJwtToken);
+        authModel.IsEmailConfirmed = user.EmailConfirmed;
+        authModel.UserId = user.Id;
 
         return authModel;
     }
@@ -91,8 +94,8 @@ public class AuthService(
             Roles = ["User"],
             Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
             UserName = user.UserName,
-            User = user,
-            UserId = user.Id
+            UserId = user.Id,
+            IsEmailConfirmed = user.EmailConfirmed
         };
     }
 

@@ -29,16 +29,15 @@ public class AuthController(IAuthService authService,
 
         if (!result.IsAuthenticated)
             return BadRequest(result.Message);
-
-        var token = await _userManager.GenerateEmailConfirmationTokenAsync((ApplicationUser)result.User!);
+        var user = await _userManager.FindByIdAsync(result.UserId!);
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user!);
         var confirmationLink = Url.Action(nameof(ConfirmEmail), "Auth", new { userId = result.UserId, token }, Request.Scheme);
         var sent = await _emailSender.SendEmailAsync(result.Email!, "Confirm Email", confirmationLink!);
 
         if (sent)
-            return Ok(result);
+            return Ok("Good, Please confirm your email, then login again.");
 
-        else
-            return BadRequest("Email not verified");
+        return BadRequest("Email not verified");
 
     }
 
