@@ -35,10 +35,10 @@ public class AuthController(IAuthService authService,
         var sent = await _emailSender.SendEmailAsync(result.Email!, "Confirm Email", confirmationLink!);
 
         if (sent)
-            return Ok(result);
+            return Ok("Good, Please confirm email, then login again.");
 
         else
-            return BadRequest("Email not verified");
+            return BadRequest("Confirmation message has not been sent.");
 
     }
 
