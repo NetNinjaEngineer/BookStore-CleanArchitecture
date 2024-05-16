@@ -10,6 +10,6 @@ namespace BookStore.Application.Contracts.Identity
 
         Task SignOutAsync();
 
-        Task<bool> ConfirmEmailAsync(ConfirmEmailModel confirmModel);
+        Task<(bool confirmed, string message)> ConfirmEmailAsync(ConfirmEmailModel confirmModel);
     }
 }

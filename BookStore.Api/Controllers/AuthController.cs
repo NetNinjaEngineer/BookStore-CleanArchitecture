@@ -73,13 +73,11 @@ public class AuthController : ControllerBase
     [HttpGet("ConfirmEmail")]
     public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailModel model)
     {
-        var user = await _userManager.FindByIdAsync(model.UserId!);
-        if (user == null) return BadRequest("Invalid User ID");
+        var (confirmed, message) = await _authService.ConfirmEmailAsync(model);
+        if (!confirmed)
+            return BadRequest(message);
 
-        var result = await _userManager.ConfirmEmailAsync(user, model.Token!);
-        if (result.Succeeded) return Ok("Email confirmed successfully");
-
-        return BadRequest(result.Errors);
+        return Ok(message);
     }
 
 }

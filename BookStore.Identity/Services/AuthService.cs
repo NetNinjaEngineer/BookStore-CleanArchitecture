@@ -1,5 +1,4 @@
 ﻿using BookStore.Application.Contracts.Identity;
-using BookStore.Application.Contracts.Identity.Models;
 using BookStore.Identity.Models;
 using BookStore.Shared.Models;
 using Microsoft.AspNetCore.Http;
@@ -14,16 +13,32 @@ namespace BookStore.Identity.Services;
 
 public class AuthService(
     UserManager<ApplicationUser> userManager,
-    RoleManager<IdentityRole> roleManager,
     IConfiguration configuration,
     IHttpContextAccessor contextAccessor,
     SignInManager<ApplicationUser> signInManager) : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
-    private readonly RoleManager<IdentityRole> _roleManager = roleManager;
     private readonly IConfiguration _configuration = configuration;
     private readonly IHttpContextAccessor _contextAccessor = contextAccessor;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+
+    public async Task<(bool confirmed, string message)> ConfirmEmailAsync(ConfirmEmailModel confirmModel)
+    {
+        var user = await _userManager.FindByIdAsync(confirmModel.UserId!);
+
+        if (user == null)
+            return (false, $"There is no user with ID: ${confirmModel.UserId}");
+
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+
+        if (result.Succeeded)
+            return (true, "Email confirmed successfully.");
+
+        return (false, result.Errors.Select(e => e.Description).ToString()!);
+
+    }
 
     public async Task<AuthModel> GetTokenRequestModelAsync(TokenRequestModel model)
     {
