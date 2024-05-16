@@ -20,6 +20,8 @@ namespace BookStore.Infrastructure
 
             services.AddScoped<IEmailSender, EmailSender>();
 
+            services.AddScoped<IEmailConfirmationService, EmailConfirmationService>();
+
             return services;
         }
 

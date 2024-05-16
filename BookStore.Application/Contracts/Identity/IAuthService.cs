@@ -1,4 +1,4 @@
-﻿using BookStore.Application.Contracts.Identity.Models;
+﻿using BookStore.Shared.Models;
 
 namespace BookStore.Application.Contracts.Identity
 {
@@ -9,5 +9,7 @@ namespace BookStore.Application.Contracts.Identity
         Task<AuthModel> GetTokenRequestModelAsync(TokenRequestModel model);
 
         Task SignOutAsync();
+
+        Task<bool> ConfirmEmailAsync(ConfirmEmailModel confirmModel);
     }
 }

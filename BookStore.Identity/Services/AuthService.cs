@@ -1,6 +1,7 @@
 ﻿using BookStore.Application.Contracts.Identity;
 using BookStore.Application.Contracts.Identity.Models;
 using BookStore.Identity.Models;
+using BookStore.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;

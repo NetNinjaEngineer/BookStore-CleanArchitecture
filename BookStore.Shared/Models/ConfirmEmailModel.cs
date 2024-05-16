@@ -1,4 +1,4 @@
-﻿namespace BookStore.Identity.Models
+﻿namespace BookStore.Shared.Models
 {
     public class ConfirmEmailModel
     {

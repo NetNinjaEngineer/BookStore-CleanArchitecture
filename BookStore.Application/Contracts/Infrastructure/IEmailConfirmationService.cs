@@ -2,6 +2,6 @@
 {
     public interface IEmailConfirmationService
     {
-        Task<bool> SendConfirmationEmailAsync(string userId, string email, string confirmationLink);
+        Task<bool> SendConfirmationEmailAsync(string userId, string email, string subject);
     }
 }
