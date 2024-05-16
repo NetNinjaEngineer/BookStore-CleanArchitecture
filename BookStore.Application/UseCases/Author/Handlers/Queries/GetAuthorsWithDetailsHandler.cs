@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BookStore.Application.Contracts.Infrastructure;
+using BookStore.Application.Contracts.Persistence;
 using BookStore.Application.Responses;
 using BookStore.Application.Specifications.Features.Author;
 using BookStore.Application.UseCases.Author.Requests.Queries;

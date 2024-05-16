@@ -1,9 +1,10 @@
 ﻿using BookStore.Application.Contracts.Identity;
 using BookStore.Application.Contracts.Identity.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
+using BookStore.Application.Contracts.Infrastructure;
+using BookStore.Application.Contracts.Infrastructure.Models;
+using BookStore.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Api.Controllers;
@@ -11,8 +12,13 @@ namespace BookStore.Api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [AllowAnonymous]
-public class AuthController(IAuthService authService) : ControllerBase
+public class AuthController(IAuthService authService,
+    UserManager<ApplicationUser> userManager,
+    IEmailSender emailSender) : ControllerBase
 {
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly IEmailSender _emailSender = emailSender;
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpPost("Register")]
     public async Task<ActionResult<AuthModel>> RegisterAsync(RegisterModel registerModel)
@@ -24,6 +30,10 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         if (!result.IsAuthenticated)
             return BadRequest(result.Message);
+
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync((ApplicationUser)result.User!);
+        var confirmationLink = Url.Action(nameof(ConfirmEmail), "Auth", new { userId = result.UserId, token }, Request.Scheme);
+        await _emailSender.SendEmailAsync(new EmailModel(result.Email, "confirm email", confirmationLink!));
 
         return Ok(result);
     }
@@ -51,28 +61,16 @@ public class AuthController(IAuthService authService) : ControllerBase
         return Ok("Logged out successfully");
     }
 
-    [HttpGet("signin-google")]
-    public IActionResult GoogleLogin()
+    [HttpPost("ConfirmEmail")]
+    public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailModel model)
     {
-        var properties = new AuthenticationProperties { RedirectUri = Url.Action("GoogleResponse") };
-        return Challenge(properties, GoogleDefaults.AuthenticationScheme);
-    }
+        var user = await _userManager.FindByIdAsync(model.UserId);
+        if (user == null) return BadRequest("Invalid User ID");
 
-    [HttpGet("google-response")]
-    public async Task<IActionResult> GoogleResponse()
-    {
-        var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        if (!result.Succeeded)
-            return BadRequest(); // Handle error
+        var result = await _userManager.ConfirmEmailAsync(user, model.Token);
+        if (result.Succeeded) return Ok("Email confirmed successfully");
 
-        var claims = result.Principal.Identities
-            .FirstOrDefault()?.Claims.Select(claim => new
-            {
-                claim.Type,
-                claim.Value
-            });
-
-        return Ok(claims);
+        return BadRequest(result.Errors);
     }
 
 }

@@ -1,5 +1,5 @@
 using AutoMapper;
-using BookStore.Application.Contracts.Infrastructure;
+using BookStore.Application.Contracts.Persistence;
 using BookStore.Application.UseCases.Genre.Requests.Queries;
 using MediatR;
 

@@ -8,7 +8,8 @@ namespace BookStore.Persistence
 {
     public static class PersistenceRegisterationServices
     {
-        public static IServiceCollection RegisterPersistenceServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection RegisterPersistenceServices(this IServiceCollection services,
+            IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),

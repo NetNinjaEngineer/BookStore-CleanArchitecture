@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BookStore.Application.Contracts.Infrastructure;
+using BookStore.Application.Contracts.Persistence;
 using BookStore.Application.Dtos.Book;
 using BookStore.Application.Dtos.Book.Validators;
 using BookStore.Application.Exceptions;

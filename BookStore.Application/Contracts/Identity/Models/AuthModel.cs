@@ -9,5 +9,7 @@
         public List<string> Roles { get; set; } = new();
         public bool IsAuthenticated { get; set; }
         public DateTime ExpiresOn { get; set; }
+        public object? User { get; set; }
+        public string? UserId { get; set; }
     }
 }

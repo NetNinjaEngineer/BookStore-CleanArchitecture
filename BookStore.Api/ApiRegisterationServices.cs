@@ -1,5 +1,6 @@
 ﻿using BookStore.Application;
 using BookStore.Identity;
+using BookStore.Infrastructure;
 using BookStore.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -31,6 +32,7 @@ public static class ApiRegisterationServices
         services.AddSwaggerGen();
         services.RegisterPersistenceServices(configuration);
         services.RegisterApplicationServices();
+        services.RegisterInfrastructurePart(configuration);
         services.RegisterIdentityServices(configuration);
         services.AddHttpContextAccessor();
         services.AddCors();

@@ -15,23 +15,31 @@ namespace BookStore.Infrastructure.Services
             _emailSettings = emailSettings;
         }
 
-        public async Task SendEmailAsync(EmailModel email)
+        public async Task<bool> SendEmailAsync(EmailModel email)
         {
-            // prepare client
-            var client = new SendGridClient(_emailSettings.CurrentValue.ApiKey);
+            var apiKey = _emailSettings.CurrentValue.ApiKey;
 
-            //email message
-            var message = new SendGridMessage
-            {
-                From = new EmailAddress(_emailSettings.CurrentValue.FromEmail,
-                _emailSettings.CurrentValue.FromName),
-                Subject = email.Subject,
-                PlainTextContent = email.Message,
-                HtmlContent = email.Message
-            };
+            var client = new SendGridClient(apiKey);
 
-            message.AddTo(new EmailAddress(email.Email));
-            await client.SendEmailAsync(message);
+            var from = new EmailAddress(_emailSettings.CurrentValue.FromEmail,
+                _emailSettings.CurrentValue.FromName);
+
+            var subject = email.Subject;
+
+            var toEmail = new EmailAddress(email.To);
+
+            var plainTextContent = $"{email.Message}";
+
+            var htmlContent = $"<strong>{email.Message}</strong>";
+
+            var msg = MailHelper.CreateSingleEmail(from, toEmail, subject, plainTextContent, htmlContent);
+
+            var response = await client.SendEmailAsync(msg);
+
+            if (!response.IsSuccessStatusCode)
+                return false;
+
+            return true;
         }
     }
 }

@@ -4,6 +4,6 @@ namespace BookStore.Application.Contracts.Infrastructure
 {
     public interface IEmailSender
     {
-        Task SendEmailAsync(EmailModel email);
+        Task<bool> SendEmailAsync(EmailModel email);
     }
 }

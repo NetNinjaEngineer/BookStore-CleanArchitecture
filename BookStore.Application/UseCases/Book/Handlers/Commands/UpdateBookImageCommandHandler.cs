@@ -1,4 +1,4 @@
-﻿using BookStore.Application.Contracts.Infrastructure;
+﻿using BookStore.Application.Contracts.Persistence;
 using BookStore.Application.Dtos.Book.Validators;
 using BookStore.Application.Exceptions;
 using BookStore.Application.UseCases.Book.Requests.Commands;

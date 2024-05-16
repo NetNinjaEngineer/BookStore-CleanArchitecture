@@ -1,4 +1,4 @@
 ﻿namespace BookStore.Application.Contracts.Infrastructure.Models
 {
-    public record EmailModel(string Email, string Subject, string Message);
+    public record EmailModel(string To, string Subject, string Message);
 }

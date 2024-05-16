@@ -11,7 +11,12 @@ using System.Text;
 
 namespace BookStore.Identity.Services;
 
-public class AuthService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, IHttpContextAccessor contextAccessor, SignInManager<ApplicationUser> signInManager) : IAuthService
+public class AuthService(
+    UserManager<ApplicationUser> userManager,
+    RoleManager<IdentityRole> roleManager,
+    IConfiguration configuration,
+    IHttpContextAccessor contextAccessor,
+    SignInManager<ApplicationUser> signInManager) : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly RoleManager<IdentityRole> _roleManager = roleManager;
@@ -85,7 +90,9 @@ public class AuthService(UserManager<ApplicationUser> userManager, RoleManager<I
             ExpiresOn = jwtSecurityToken.ValidTo,
             Roles = ["User"],
             Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-            UserName = user.UserName
+            UserName = user.UserName,
+            User = user,
+            UserId = user.Id
         };
     }
 
