@@ -1,7 +1,6 @@
 ﻿using BookStore.Application.Contracts.Identity;
 using BookStore.Application.Contracts.Identity.Models;
 using BookStore.Application.Contracts.Infrastructure;
-using BookStore.Application.Contracts.Infrastructure.Models;
 using BookStore.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +20,7 @@ public class AuthController(IAuthService authService,
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpPost("Register")]
-    public async Task<ActionResult<AuthModel>> RegisterAsync(RegisterModel registerModel)
+    public async Task<IActionResult> RegisterAsync(RegisterModel registerModel)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -33,9 +32,14 @@ public class AuthController(IAuthService authService,
 
         var token = await _userManager.GenerateEmailConfirmationTokenAsync((ApplicationUser)result.User!);
         var confirmationLink = Url.Action(nameof(ConfirmEmail), "Auth", new { userId = result.UserId, token }, Request.Scheme);
-        await _emailSender.SendEmailAsync(new EmailModel(result.Email, "confirm email", confirmationLink!));
+        var sent = await _emailSender.SendEmailAsync(result.Email!, "Confirm Email", confirmationLink!);
 
-        return Ok(result);
+        if (sent)
+            return Ok(result);
+
+        else
+            return BadRequest("Email not verified");
+
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -61,13 +65,13 @@ public class AuthController(IAuthService authService,
         return Ok("Logged out successfully");
     }
 
-    [HttpPost("ConfirmEmail")]
-    public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailModel model)
+    [HttpGet("ConfirmEmail")]
+    public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailModel model)
     {
-        var user = await _userManager.FindByIdAsync(model.UserId);
+        var user = await _userManager.FindByIdAsync(model.UserId!);
         if (user == null) return BadRequest("Invalid User ID");
 
-        var result = await _userManager.ConfirmEmailAsync(user, model.Token);
+        var result = await _userManager.ConfirmEmailAsync(user, model.Token!);
         if (result.Succeeded) return Ok("Email confirmed successfully");
 
         return BadRequest(result.Errors);

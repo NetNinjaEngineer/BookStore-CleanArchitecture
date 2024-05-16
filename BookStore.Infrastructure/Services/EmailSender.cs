@@ -1,5 +1,4 @@
 ﻿using BookStore.Application.Contracts.Infrastructure;
-using BookStore.Application.Contracts.Infrastructure.Models;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -8,38 +7,21 @@ namespace BookStore.Infrastructure.Services
 {
     public sealed class EmailSender : IEmailSender
     {
-        private readonly IOptionsMonitor<SendGridSettings> _emailSettings;
+        private readonly IOptions<SendGridSettings> _emailSettings;
 
-        public EmailSender(IOptionsMonitor<SendGridSettings> emailSettings)
+        public EmailSender(IOptions<SendGridSettings> emailSettings)
         {
             _emailSettings = emailSettings;
         }
 
-        public async Task<bool> SendEmailAsync(EmailModel email)
+        public async Task<bool> SendEmailAsync(string to, string subject, string message)
         {
-            var apiKey = _emailSettings.CurrentValue.ApiKey;
-
-            var client = new SendGridClient(apiKey);
-
-            var from = new EmailAddress(_emailSettings.CurrentValue.FromEmail,
-                _emailSettings.CurrentValue.FromName);
-
-            var subject = email.Subject;
-
-            var toEmail = new EmailAddress(email.To);
-
-            var plainTextContent = $"{email.Message}";
-
-            var htmlContent = $"<strong>{email.Message}</strong>";
-
-            var msg = MailHelper.CreateSingleEmail(from, toEmail, subject, plainTextContent, htmlContent);
-
+            var client = new SendGridClient(_emailSettings.Value.ApiKey);
+            var from = new EmailAddress(_emailSettings.Value.FromEmail, _emailSettings.Value.FromName);
+            var toEmail = new EmailAddress(to, "Test User");
+            var msg = MailHelper.CreateSingleEmail(from, toEmail, subject, message, "");
             var response = await client.SendEmailAsync(msg);
-
-            if (!response.IsSuccessStatusCode)
-                return false;
-
-            return true;
+            return response.IsSuccessStatusCode ? true : false;
         }
     }
 }
