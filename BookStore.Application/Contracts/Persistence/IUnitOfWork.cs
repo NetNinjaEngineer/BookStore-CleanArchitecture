@@ -1,4 +1,4 @@
-﻿namespace BookStore.Application.Contracts.Infrastructure
+﻿namespace BookStore.Application.Contracts.Persistence
 {
     public interface IUnitOfWork
     {

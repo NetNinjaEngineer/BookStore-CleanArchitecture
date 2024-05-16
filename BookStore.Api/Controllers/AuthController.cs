@@ -1,5 +1,8 @@
 ﻿using BookStore.Application.Contracts.Identity;
 using BookStore.Application.Contracts.Identity.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,6 +49,30 @@ public class AuthController(IAuthService authService) : ControllerBase
     {
         await authService.SignOutAsync();
         return Ok("Logged out successfully");
+    }
+
+    [HttpGet("signin-google")]
+    public IActionResult GoogleLogin()
+    {
+        var properties = new AuthenticationProperties { RedirectUri = Url.Action("GoogleResponse") };
+        return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+    }
+
+    [HttpGet("google-response")]
+    public async Task<IActionResult> GoogleResponse()
+    {
+        var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        if (!result.Succeeded)
+            return BadRequest(); // Handle error
+
+        var claims = result.Principal.Identities
+            .FirstOrDefault()?.Claims.Select(claim => new
+            {
+                claim.Type,
+                claim.Value
+            });
+
+        return Ok(claims);
     }
 
 }

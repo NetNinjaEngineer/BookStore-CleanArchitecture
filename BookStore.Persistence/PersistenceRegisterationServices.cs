@@ -1,4 +1,5 @@
 ﻿using BookStore.Application.Contracts.Infrastructure;
+using BookStore.Application.Contracts.Persistence;
 using BookStore.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

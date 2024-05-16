@@ -1,4 +1,4 @@
-﻿using BookStore.Application.Contracts.Infrastructure;
+﻿using BookStore.Application.Contracts.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Persistence.Repositories

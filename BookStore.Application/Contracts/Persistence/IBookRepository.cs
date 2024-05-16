@@ -1,7 +1,7 @@
 ﻿using BookStore.Application.Specifications.Features.Book;
 using BookStore.Domain;
 
-namespace BookStore.Application.Contracts.Infrastructure
+namespace BookStore.Application.Contracts.Persistence
 {
     public interface IBookRepository : IGenericRepository<Book>
     {

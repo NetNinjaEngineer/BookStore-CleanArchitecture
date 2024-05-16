@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Persistence", "Bo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Api", "BookStore.Api\BookStore.Api.csproj", "{265D19B0-51D8-4510-9195-860C0561F650}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Identity", "BookStore.Identity\BookStore.Identity.csproj", "{056D1D9E-B788-4FC0-BBF3-DFB487537BE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Identity", "BookStore.Identity\BookStore.Identity.csproj", "{056D1D9E-B788-4FC0-BBF3-DFB487537BE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Infrastructure", "BookStore.Infrastructure\BookStore.Infrastructure.csproj", "{30FD838E-CD81-42FC-B282-FA8545F40CFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{056D1D9E-B788-4FC0-BBF3-DFB487537BE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{056D1D9E-B788-4FC0-BBF3-DFB487537BE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{056D1D9E-B788-4FC0-BBF3-DFB487537BE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30FD838E-CD81-42FC-B282-FA8545F40CFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30FD838E-CD81-42FC-B282-FA8545F40CFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30FD838E-CD81-42FC-B282-FA8545F40CFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30FD838E-CD81-42FC-B282-FA8545F40CFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,6 +71,7 @@ Global
 		{F09E566F-4BDA-4779-982D-09B8DD863736} = {A4D83D8E-9AD6-4043-A1F8-549818F252F0}
 		{265D19B0-51D8-4510-9195-860C0561F650} = {1E1E0FF8-BC2F-4A78-A5EF-AB881EC6BCAF}
 		{056D1D9E-B788-4FC0-BBF3-DFB487537BE3} = {A4D83D8E-9AD6-4043-A1F8-549818F252F0}
+		{30FD838E-CD81-42FC-B282-FA8545F40CFF} = {A4D83D8E-9AD6-4043-A1F8-549818F252F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD28BC85-FDBC-42A6-81E1-BF4B651388C9}

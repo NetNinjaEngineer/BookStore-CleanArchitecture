@@ -1,4 +1,4 @@
-﻿using BookStore.Application.Contracts.Infrastructure;
+﻿using BookStore.Application.Contracts.Persistence;
 using BookStore.Application.Specifications;
 using BookStore.Application.Specifications.Features.Book;
 using BookStore.Domain;
