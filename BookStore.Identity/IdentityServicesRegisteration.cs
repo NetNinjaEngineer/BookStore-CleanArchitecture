@@ -3,6 +3,9 @@ using BookStore.Identity.Models;
 using BookStore.Identity.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +30,17 @@ public static class IdentityServicesRegisteration
             .AddEntityFrameworkStores<BookStoreIdentityDbContext>();
 
         services.AddScoped<SeedRoleService>();
+
+        // Register IActionContextAccessor
+        services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+        // Register IUrlHelper
+        services.AddScoped<IUrlHelper>(sp =>
+        {
+            var actionContext = sp.GetRequiredService<IActionContextAccessor>().ActionContext;
+            return new UrlHelper(actionContext!);
+        });
+
 
         // register authentication
         services.AddAuthentication(options =>

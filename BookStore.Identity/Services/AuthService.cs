@@ -1,4 +1,5 @@
-﻿using BookStore.Application.Contracts.Identity;
+﻿using AutoMapper;
+using BookStore.Application.Contracts.Identity;
 using BookStore.Identity.Models;
 using BookStore.Shared.Models;
 using Microsoft.AspNetCore.Http;
@@ -11,16 +12,18 @@ using System.Text;
 
 namespace BookStore.Identity.Services;
 
-public class AuthService(
+public sealed class AuthService(
     UserManager<ApplicationUser> userManager,
     IConfiguration configuration,
     IHttpContextAccessor contextAccessor,
-    SignInManager<ApplicationUser> signInManager) : IAuthService
+    SignInManager<ApplicationUser> signInManager,
+    IMapper mapper) : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly IConfiguration _configuration = configuration;
     private readonly IHttpContextAccessor _contextAccessor = contextAccessor;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+    private readonly IMapper _mapper = mapper;
 
     public async Task<(bool confirmed, string message)> ConfirmEmailAsync(ConfirmEmailModel confirmModel)
     {
@@ -37,6 +40,27 @@ public class AuthService(
             return (true, "Email confirmed successfully.");
 
         return (false, result.Errors.Select(e => e.Description).ToString()!);
+
+    }
+
+    public async Task<UserInfoModel> GetCurrentUserInformation(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+            return null!;
+
+        var userInfo = new UserInfoModel()
+        {
+            UserName = user.UserName,
+            Email = user.Email,
+            EmailConfirmed = user.EmailConfirmed,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            NormalizedEmail = user.NormalizedEmail,
+            PhoneNumber = user.PhoneNumber
+        };
+
+        return userInfo;
 
     }
 
@@ -60,6 +84,8 @@ public class AuthService(
         authModel.Roles = [.. userRoles];
         authModel.ExpiresOn = securityJwtToken.ValidTo;
         authModel.Email = model.Email;
+        authModel.UserName = user.UserName;
+        authModel.UserId = user.Id;
         authModel.Token = new JwtSecurityTokenHandler().WriteToken(securityJwtToken);
 
         return authModel;
@@ -116,6 +142,22 @@ public class AuthService(
     {
         _contextAccessor?.HttpContext?.Response.Cookies.Delete("token");
         await _signInManager.SignOutAsync();
+    }
+
+    public async Task<(bool, string)> UpdateUserInfoAsync(UpdateUserInfoModel model)
+    {
+        var userId = _contextAccessor.HttpContext?.User.FindFirstValue("uid");
+        var user = await _userManager.FindByIdAsync(userId!);
+        if (user == null)
+            return (false, "Invalid user id.");
+
+        user.Email = model.Email;
+
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+            return (false, result.Errors.Select(e => e.Description).ToString()!);
+
+        return (true, "User information Updated successfully");
     }
 
     private async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)

@@ -71,10 +71,33 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("ConfirmEmail")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailModel model)
     {
         var (confirmed, message) = await _authService.ConfirmEmailAsync(model);
         if (!confirmed)
+            return BadRequest(message);
+
+        return Ok(message);
+    }
+
+    [HttpGet("Manage")]
+    [ProducesResponseType(typeof(UserInfoModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetUserInformation(string userId)
+        => await _authService.GetCurrentUserInformation(userId) is null ?
+        NotFound($"User with ID: {userId} not founded.") : Ok(
+            await _authService.GetCurrentUserInformation(userId));
+
+    [HttpPost("Manage")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [Authorize]
+    public async Task<IActionResult> UpdateUserInformation(UpdateUserInfoModel model)
+    {
+        var (updated, message) = await _authService.UpdateUserInfoAsync(model);
+        if (!updated)
             return BadRequest(message);
 
         return Ok(message);

@@ -11,5 +11,10 @@ namespace BookStore.Application.Contracts.Identity
         Task SignOutAsync();
 
         Task<(bool confirmed, string message)> ConfirmEmailAsync(ConfirmEmailModel confirmModel);
+
+        Task<(bool, string)> UpdateUserInfoAsync(UpdateUserInfoModel model);
+
+        Task<UserInfoModel> GetCurrentUserInformation(string userId);
+
     }
 }
