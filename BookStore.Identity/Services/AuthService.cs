@@ -47,11 +47,20 @@ public sealed class AuthService(
 
     }
 
+    public async Task<string> GeneratePasswordResetToken(string userEmail)
+    {
+        var user = await _userManager.FindByEmailAsync(userEmail);
+        if (user is not null)
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        return null!;
+    }
+
     public async Task<UserInfoModel> GetCurrentUserInformation(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user is null)
             return null!;
+        var roles = await _userManager.GetRolesAsync(user);
 
         var userInfo = new UserInfoModel()
         {
@@ -61,7 +70,8 @@ public sealed class AuthService(
             FirstName = user.FirstName,
             LastName = user.LastName,
             NormalizedEmail = user.NormalizedEmail,
-            PhoneNumber = user.PhoneNumber
+            PhoneNumber = user.PhoneNumber,
+            UserRoles = [.. roles]
         };
 
         return userInfo;
@@ -73,8 +83,20 @@ public sealed class AuthService(
         var authModel = new AuthModel();
 
         var user = await _userManager.FindByEmailAsync(model.Email!);
+        if (user == null)
+        {
+            authModel.Message = "Invalid email or password";
+            authModel.IsAuthenticated = false;
+            return authModel;
+        }
 
-        if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password!))
+        if (await _userManager.IsLockedOutAsync(user))
+        {
+            authModel.Message = "User is locked out";
+            return authModel;
+        }
+
+        if (!await _userManager.CheckPasswordAsync(user, model.Password!))
         {
             authModel.Message = "Invalid email or password";
             authModel.IsAuthenticated = false;
@@ -83,7 +105,7 @@ public sealed class AuthService(
 
         if (!user.EmailConfirmed)
         {
-            authModel.Message = "Confirm your email, then try again !!!";
+            authModel.Message = "Confirm your email, then try again!";
             authModel.IsAuthenticated = false;
             return authModel;
         }
@@ -157,17 +179,17 @@ public sealed class AuthService(
         var user = await _userManager.FindByEmailAsync(model.Email!);
         if (user == null) return false;
 
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-        var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword!);
+        var result = await _userManager.ResetPasswordAsync(user, model.Token!, model.NewPassword!);
         return result.Succeeded;
     }
 
-    public async Task<bool> SendPasswordResetEmailAsync(string email, string newPassword)
+    public async Task<bool> SendPasswordResetEmailAsync(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null) return false;
-        var callbackUrl = _linkGenerator.GetUriByAction(_contextAccessor.HttpContext!, "ResetPassword", "Auth", new { email = user.Email, newPassword });
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        var callbackUrl = _linkGenerator.GetUriByAction(_contextAccessor.HttpContext!, "ResetPassword", "Auth", new { token, email = user.Email });
         var emailBody = $"Please reset your password by <a href='{callbackUrl}'>clicking here</a>.";
 
         return await _emailSender.SendEmailAsync(user.Email!, "Reset Password", emailBody);

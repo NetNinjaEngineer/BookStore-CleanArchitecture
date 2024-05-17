@@ -7,4 +7,5 @@ public sealed class UserInfoModel : BaseModel
     public string? PhoneNumber { get; set; }
     public string? UserName { get; set; }
     public bool EmailConfirmed { get; set; }
+    public List<string> UserRoles { get; set; } = [];
 }

@@ -16,6 +16,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+app.UseMiddleware<RequestCultureMiddleware>();
+
 app.UseCors(x =>
     x.AllowAnyHeader()
     .AllowAnyMethod()

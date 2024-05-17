@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Api.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/auth")]
 [ApiController]
 [AllowAnonymous]
 public class AuthController : ControllerBase
@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [HttpPost("Register")]
+    [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync(RegisterModel registerModel)
     {
         if (!ModelState.IsValid)
@@ -49,7 +49,7 @@ public class AuthController : ControllerBase
 
 
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [HttpPost("Login")]
+    [HttpPost("login")]
     public async Task<ActionResult<AuthModel>> GetTokenAsync(TokenRequestModel tokenRequest)
     {
         if (!ModelState.IsValid)
@@ -65,7 +65,7 @@ public class AuthController : ControllerBase
 
 
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [HttpPost("Logout")]
+    [HttpPost("logout")]
     public async Task<IActionResult> LogoutAsync()
     {
         await _authService.SignOutAsync();
@@ -73,7 +73,7 @@ public class AuthController : ControllerBase
     }
 
 
-    [HttpGet("ConfirmEmail")]
+    [HttpGet("confirm-email")]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailModel model)
@@ -86,7 +86,7 @@ public class AuthController : ControllerBase
     }
 
 
-    [HttpGet("Manage")]
+    [HttpGet("manage-info")]
     [ProducesResponseType(typeof(UserInfoModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetUserInformation(string userId)
@@ -95,7 +95,7 @@ public class AuthController : ControllerBase
             await _authService.GetCurrentUserInformation(userId));
 
 
-    [HttpPost("Manage")]
+    [HttpPost("manage")]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [Authorize]
@@ -109,13 +109,13 @@ public class AuthController : ControllerBase
     }
 
 
-    [HttpPost("ForgotPassword")]
+    [HttpPost("forget-password")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgetPasswordModel model)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var sent = await _authService.SendPasswordResetEmailAsync(model.Email!, model.NewPassword!);
+        var sent = await _authService.SendPasswordResetEmailAsync(model.Email!);
 
         if (sent)
             return Ok("Password reset email sent");
@@ -123,21 +123,8 @@ public class AuthController : ControllerBase
         return BadRequest("Failed to send password reset email.");
     }
 
-    [HttpGet("ResetPassword")]
-    public async Task<IActionResult> ResetPasswordVGet([FromQuery] ResetPasswordModel model)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
 
-        var result = await _authService.ResetPasswordAsync(model);
-        if (result)
-            return Ok("Password reset successfully");
-
-        return BadRequest("Failed to reset password.");
-    }
-
-
-    [HttpPost("ResetPassword")]
+    [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
     {
         if (!ModelState.IsValid)
@@ -148,5 +135,16 @@ public class AuthController : ControllerBase
             return Ok("Password reset successfully");
 
         return BadRequest("Failed to reset password.");
+    }
+
+    [HttpPost("reset-password-token")]
+    public async Task<IActionResult> GeneratePasswordResetToken([FromBody] string email)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest();
+        var token = await _authService.GeneratePasswordResetToken(email);
+        if (string.IsNullOrEmpty(token))
+            return BadRequest("User email not exists.");
+        return Ok(token);
     }
 }

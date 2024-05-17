@@ -25,7 +25,15 @@ public static class IdentityServicesRegisteration
             options.UseSqlServer(configuration.GetConnectionString("BookStoreIdentityConnection"),
                 options => options.MigrationsAssembly(typeof(BookStoreIdentityDbContext).Assembly.FullName)));
         // register identity
-        services.AddIdentity<ApplicationUser, IdentityRole>()
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        {
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequiredLength = 6;
+            options.Password.RequiredUniqueChars = 1;
+        })
             .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<BookStoreIdentityDbContext>();
 
