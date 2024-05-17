@@ -33,17 +33,6 @@ public class AuthController : ControllerBase
 
         if (!result.IsAuthenticated)
             return BadRequest(result.Message);
-<<<<<<< HEAD
-        var user = await _userManager.FindByIdAsync(result.UserId!);
-        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user!);
-        var confirmationLink = Url.Action(nameof(ConfirmEmail), "Auth", new { userId = result.UserId, token }, Request.Scheme);
-        var sent = await _emailSender.SendEmailAsync(result.Email!, "Confirm Email", confirmationLink!);
-
-        if (sent)
-            return Ok("Good, Please confirm your email, then login again.");
-
-        return BadRequest("Email not verified");
-=======
 
         bool sent = await _emailConfirmationService
             .SendConfirmationEmailAsync(
@@ -55,7 +44,6 @@ public class AuthController : ControllerBase
 
         else
             return BadRequest("Confirmation message has not been sent.");
->>>>>>> UserInfomationFeature
 
     }
 
