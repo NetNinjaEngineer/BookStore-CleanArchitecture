@@ -1,9 +1,10 @@
-﻿using AutoMapper;
-using BookStore.Application.Contracts.Identity;
+﻿using BookStore.Application.Contracts.Identity;
+using BookStore.Application.Contracts.Infrastructure;
 using BookStore.Identity.Models;
 using BookStore.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,16 +15,19 @@ namespace BookStore.Identity.Services;
 
 public sealed class AuthService(
     UserManager<ApplicationUser> userManager,
+    SignInManager<ApplicationUser> signInManager,
     IConfiguration configuration,
     IHttpContextAccessor contextAccessor,
-    SignInManager<ApplicationUser> signInManager,
-    IMapper mapper) : IAuthService
+    IEmailSender emailSender,
+    LinkGenerator linkGenerator) : IAuthService
 {
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly IConfiguration _configuration = configuration;
     private readonly IHttpContextAccessor _contextAccessor = contextAccessor;
+    private readonly IEmailSender _emailSender = emailSender;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
-    private readonly IMapper _mapper = mapper;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly LinkGenerator _linkGenerator = linkGenerator;
+
 
     public async Task<(bool confirmed, string message)> ConfirmEmailAsync(ConfirmEmailModel confirmModel)
     {
@@ -73,6 +77,13 @@ public sealed class AuthService(
         if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password!))
         {
             authModel.Message = "Invalid email or password";
+            authModel.IsAuthenticated = false;
+            return authModel;
+        }
+
+        if (!user.EmailConfirmed)
+        {
+            authModel.Message = "Confirm your email, then try again !!!";
             authModel.IsAuthenticated = false;
             return authModel;
         }
@@ -141,11 +152,29 @@ public sealed class AuthService(
         };
     }
 
-    public async Task SignOutAsync()
+    public async Task<bool> ResetPasswordAsync(ResetPasswordModel model)
     {
-        _contextAccessor?.HttpContext?.Response.Cookies.Delete("token");
-        await _signInManager.SignOutAsync();
+        var user = await _userManager.FindByEmailAsync(model.Email!);
+        if (user == null) return false;
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword!);
+        return result.Succeeded;
     }
+
+    public async Task<bool> SendPasswordResetEmailAsync(string email, string newPassword)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null) return false;
+        var callbackUrl = _linkGenerator.GetUriByAction(_contextAccessor.HttpContext!, "ResetPassword", "Auth", new { email = user.Email, newPassword });
+        var emailBody = $"Please reset your password by <a href='{callbackUrl}'>clicking here</a>.";
+
+        return await _emailSender.SendEmailAsync(user.Email!, "Reset Password", emailBody);
+
+    }
+
+    public async Task SignOutAsync() => await _signInManager.SignOutAsync();
 
     public async Task<(bool, string)> UpdateUserInfoAsync(UpdateUserInfoModel model)
     {

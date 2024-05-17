@@ -47,6 +47,7 @@ public class AuthController : ControllerBase
 
     }
 
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpPost("Login")]
     public async Task<ActionResult<AuthModel>> GetTokenAsync(TokenRequestModel tokenRequest)
@@ -62,6 +63,7 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpPost("Logout")]
     public async Task<IActionResult> LogoutAsync()
@@ -69,6 +71,7 @@ public class AuthController : ControllerBase
         await _authService.SignOutAsync();
         return Ok("Logged out successfully");
     }
+
 
     [HttpGet("ConfirmEmail")]
     [ProducesResponseType(200)]
@@ -82,6 +85,7 @@ public class AuthController : ControllerBase
         return Ok(message);
     }
 
+
     [HttpGet("Manage")]
     [ProducesResponseType(typeof(UserInfoModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -89,6 +93,7 @@ public class AuthController : ControllerBase
         => await _authService.GetCurrentUserInformation(userId) is null ?
         NotFound($"User with ID: {userId} not founded.") : Ok(
             await _authService.GetCurrentUserInformation(userId));
+
 
     [HttpPost("Manage")]
     [ProducesResponseType(200)]
@@ -103,4 +108,45 @@ public class AuthController : ControllerBase
         return Ok(message);
     }
 
+
+    [HttpPost("ForgotPassword")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgetPasswordModel model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var sent = await _authService.SendPasswordResetEmailAsync(model.Email!, model.NewPassword!);
+
+        if (sent)
+            return Ok("Password reset email sent");
+
+        return BadRequest("Failed to send password reset email.");
+    }
+
+    [HttpGet("ResetPassword")]
+    public async Task<IActionResult> ResetPasswordVGet([FromQuery] ResetPasswordModel model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _authService.ResetPasswordAsync(model);
+        if (result)
+            return Ok("Password reset successfully");
+
+        return BadRequest("Failed to reset password.");
+    }
+
+
+    [HttpPost("ResetPassword")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _authService.ResetPasswordAsync(model);
+        if (result)
+            return Ok("Password reset successfully");
+
+        return BadRequest("Failed to reset password.");
+    }
 }

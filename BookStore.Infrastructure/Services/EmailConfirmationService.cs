@@ -3,6 +3,7 @@ using BookStore.Identity.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace BookStore.Infrastructure.Services
 {
@@ -12,17 +13,18 @@ namespace BookStore.Infrastructure.Services
         private readonly IUrlHelper _urlHelper;
         private readonly IHttpContextAccessor _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly LinkGenerator _linkGenerator;
 
         public EmailConfirmationService(
             IEmailSender emailSender,
-            IUrlHelper urlHelper,
             UserManager<ApplicationUser> userManager,
-            IHttpContextAccessor context)
+            IHttpContextAccessor context,
+            LinkGenerator linkGenerator)
         {
             _emailSender = emailSender;
-            _urlHelper = urlHelper;
             _userManager = userManager;
             _context = context;
+            _linkGenerator = linkGenerator;
         }
 
         public async Task<bool> SendConfirmationEmailAsync(
@@ -35,7 +37,7 @@ namespace BookStore.Infrastructure.Services
                 return false;
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationLinkUrl = _urlHelper.Action("ConfirmEmail", "Auth",
+            var confirmationLinkUrl = _linkGenerator.GetUriByAction(_context.HttpContext!, "ConfirmEmail", "Auth",
                 new { userId, token }, _context.HttpContext?.Request.Scheme);
 
             var emailBody = $"Please confirm your account by clicking this link: <a href='{confirmationLinkUrl}'>link</a>";
