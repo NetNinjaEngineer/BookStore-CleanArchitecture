@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookStore.Application.Contracts.Identity.Models
+namespace BookStore.Shared.Models
 {
     public class RegisterModel
     {
