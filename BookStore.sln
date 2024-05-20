@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Identity", "BookS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Infrastructure", "BookStore.Infrastructure\BookStore.Infrastructure.csproj", "{30FD838E-CD81-42FC-B282-FA8545F40CFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Shared", "BookStore.Shared\BookStore.Shared.csproj", "{E00EE0E1-D3A2-422A-88DA-FE943ADE3575}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Shared", "BookStore.Shared\BookStore.Shared.csproj", "{E00EE0E1-D3A2-422A-88DA-FE943ADE3575}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.RazorPages", "BookStore.RazorPages\BookStore.RazorPages.csproj", "{31357909-F744-458C-8C23-FF9458427DBB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{E00EE0E1-D3A2-422A-88DA-FE943ADE3575}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E00EE0E1-D3A2-422A-88DA-FE943ADE3575}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E00EE0E1-D3A2-422A-88DA-FE943ADE3575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31357909-F744-458C-8C23-FF9458427DBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31357909-F744-458C-8C23-FF9458427DBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31357909-F744-458C-8C23-FF9458427DBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31357909-F744-458C-8C23-FF9458427DBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +85,7 @@ Global
 		{056D1D9E-B788-4FC0-BBF3-DFB487537BE3} = {A4D83D8E-9AD6-4043-A1F8-549818F252F0}
 		{30FD838E-CD81-42FC-B282-FA8545F40CFF} = {A4D83D8E-9AD6-4043-A1F8-549818F252F0}
 		{E00EE0E1-D3A2-422A-88DA-FE943ADE3575} = {256ABA9D-6193-4F5A-98EC-0AC40F1E5AAB}
+		{31357909-F744-458C-8C23-FF9458427DBB} = {01F128E0-0C82-4C8E-81BE-36F10B172315}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD28BC85-FDBC-42A6-81E1-BF4B651388C9}
