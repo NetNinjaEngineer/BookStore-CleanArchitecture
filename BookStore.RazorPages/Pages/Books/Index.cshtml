@@ -9,14 +9,16 @@
     <div class="card-container">
         @foreach (var book in Model.Books)
         {
-            <div class="card">
-                <img src="@book.ImageUrl" alt="Book Cover">
-                <div class="card-content">
-                    <h2 class="card-title">@book.Title</h2>
-                    <p class="card-details">@book.Genre</p>
-                    <p class="card-price">@book.Price.ToString("C")</p>
+           <a href="@Url.Page("Details", new {id = book.Id})" class="card-link">
+                <div class="card">
+                    <img src="@book.ImageUrl" alt="Book Cover">
+                    <div class="card-content">
+                        <h2 class="card-title">@book.Title</h2>
+                        <p class="card-details">@book.Genre</p>
+                        <p class="card-price">@book.Price.ToString("C")</p>
+                    </div>
                 </div>
-            </div>
+           </a>
         }
     </div>
 }

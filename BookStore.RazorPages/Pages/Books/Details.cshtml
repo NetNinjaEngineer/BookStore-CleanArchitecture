@@ -1,5 +1,19 @@
 ﻿@page
 @model BookStore.RazorPages.Pages.Books.DetailsModel
 @{
+    ViewData["Title"] = "Details";
+}
 
+@if (Model.Book is not null)
+{
+    <div class="container">
+        <img class="book-image" src="@Model.Book.ImageUrl" alt="Book Cover">
+        <div class="book-details">
+            <h1 class="book-title">@Model.Book.Title</h1>
+            <p class="book-info">Authors: @String.Join(" | ",Model.Book.Authors)</p>
+            <p class="book-info">Genre: @Model.Book.Genre</p>
+            <p class="book-info">Published Year: @Model.Book.PublicationYear</p>
+            <p class="book-price">@Model.Book.Price.ToString("C")</p>
+        </div>
+    </div>
 }

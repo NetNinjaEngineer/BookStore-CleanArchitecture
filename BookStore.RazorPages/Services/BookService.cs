@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace BookStore.RazorPages.Services;
 
-public class BookService : IBookService
+public class BookService : BaseHttpService, IBookService
 {
     private readonly IMapper _mapper;
     private readonly IHttpClientFactory _httpClientFactory;
@@ -25,7 +25,7 @@ public class BookService : IBookService
         using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/Books"))
         {
             requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZTUyNjAyODdAZ21haWwuY29tIiwianRpIjoiMjUyZmFiZmEtNWUyOC00OTRiLWFhNzktMmEyY2RlNTc2NWRiIiwiZW1haWwiOiJtZTUyNjAyODdAZ21haWwuY29tIiwidWlkIjoiYWJhNTJkNDAtOGMxMS00YmQ3LTljZDMtZjZhM2ZmZDVkZjgwIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3MTYxOTE2ODIsImlzcyI6IkFwaVVzZXIiLCJhdWQiOiJBcGlBdWRpZW5jZSJ9.d_MSk9I5Xt5At-5Dkm6YXx5yNW5v4EXVgLFDLS7Vjgw");
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
             using (var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead))
             {
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
@@ -36,6 +36,37 @@ public class BookService : IBookService
                         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                     });
                 }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+                else
+                {
+                    throw new Exception(response.StatusCode.ToString());
+                }
+            }
+        }
+
+        return books;
+    }
+
+    public async Task<BookListViewModel> GetBookById(int id)
+    {
+        var client = _httpClientFactory.CreateClient("BooksClient");
+        BookListViewModel book = new();
+
+        using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, $"api/Books/{id}"))
+        {
+            requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
+            using (var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead))
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    JsonSerializerOptions options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+                    book = JsonSerializer.Deserialize<BookListViewModel>(content, options)!;
+                }
                 else
                 {
                     throw new Exception(response.Content.ToString());
@@ -43,6 +74,6 @@ public class BookService : IBookService
             }
         }
 
-        return books;
+        return book;
     }
 }

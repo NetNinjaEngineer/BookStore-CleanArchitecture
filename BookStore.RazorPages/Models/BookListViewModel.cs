@@ -8,4 +8,7 @@ public class BookListViewModel
     public string? ImageName { get; set; }
     public string? Genre { get; set; }
     public string? ImageUrl { get; set; }
+    public List<string> Authors { get; set; } = [];
+    public int PublicationYear { get; set; }
+
 }
