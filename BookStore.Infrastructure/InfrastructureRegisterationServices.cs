@@ -8,14 +8,20 @@ namespace BookStore.Infrastructure
     public static class InfrastructureRegisterationServices
     {
         public static IServiceCollection RegisterInfrastructurePart(
-            this IServiceCollection services, IConfiguration configuration)
+            this IServiceCollection services)
         {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            var sendGridSection = configuration.GetSection("SendGrid");
+
             services.Configure<SendGridSettings>(options =>
             {
-                options.ApiKey = configuration["SendGrid:ApiKey"];
-                options.FromEmail = configuration["SendGrid:FromEmail"];
-                options.FromName = configuration["SendGrid:FromName"];
-
+                options.ApiKey = sendGridSection.GetValue<string>("ApiKey");
+                options.FromEmail = sendGridSection.GetValue<string>("FromEmail");
+                options.FromName = sendGridSection.GetValue<string>("FromName");
             });
 
             services.AddScoped<IEmailSender, EmailSender>();

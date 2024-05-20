@@ -16,7 +16,8 @@ namespace BookStore.Infrastructure.Services
 
         public async Task<bool> SendEmailAsync(string to, string subject, string message)
         {
-            var client = new SendGridClient("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");
+            string apiKey = _emailSettings.CurrentValue.ApiKey ?? "";
+            var client = new SendGridClient(apiKey);
             var from = new EmailAddress(_emailSettings.CurrentValue.FromEmail, _emailSettings.CurrentValue.FromName);
             var toEmail = new EmailAddress(to, "Test User");
             var msg = MailHelper.CreateSingleEmail(from, toEmail, subject, message, "");

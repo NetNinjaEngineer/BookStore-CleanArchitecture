@@ -16,13 +16,12 @@ public class RequestCultureMiddleware
         var cultureQuery = context.Request.Query["culture"];
         if (!string.IsNullOrWhiteSpace(cultureQuery))
         {
-            var culture = new CultureInfo(cultureQuery);
+            var culture = new CultureInfo(cultureQuery!);
 
             CultureInfo.CurrentCulture = culture;
             CultureInfo.CurrentUICulture = culture;
         }
-
-        // Call the next delegate/middleware in the pipeline.
+        
         await _next(context);
     }
 }

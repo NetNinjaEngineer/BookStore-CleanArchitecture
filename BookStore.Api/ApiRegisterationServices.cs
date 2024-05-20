@@ -32,7 +32,7 @@ public static class ApiRegisterationServices
         services.AddSwaggerGen();
         services.RegisterPersistenceServices(configuration);
         services.RegisterApplicationServices();
-        services.RegisterInfrastructurePart(configuration);
+        services.RegisterInfrastructurePart();
         services.RegisterIdentityServices(configuration);
         services.AddHttpContextAccessor();
         services.AddCors();
