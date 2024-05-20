@@ -1,5 +1,6 @@
 using BookStore.RazorPages.Contracts;
 using BookStore.RazorPages.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BookStore.RazorPages.Pages.Books
@@ -15,9 +16,15 @@ namespace BookStore.RazorPages.Pages.Books
 
         public IEnumerable<BookListViewModel>? Books { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string? SearchTerm { get; set; }
+
         public async Task OnGet()
         {
-            Books = await _bookService.GetAllBooks();
+            if (string.IsNullOrEmpty(SearchTerm))
+                Books = await _bookService.GetAllBooks();
+            else
+                Books = await _bookService.GetAllBooks(SearchTerm);
         }
     }
 }

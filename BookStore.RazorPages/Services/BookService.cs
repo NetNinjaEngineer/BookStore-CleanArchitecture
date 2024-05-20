@@ -50,6 +50,39 @@ public class BookService : BaseHttpService, IBookService
         return books;
     }
 
+    public async Task<IEnumerable<BookListViewModel>?> GetAllBooks(string searchTerm)
+    {
+        var client = _httpClientFactory.CreateClient("BooksClient");
+        var books = new List<BookListViewModel>();
+
+        using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, $"api/Books/Search?SearchTerm={searchTerm}"))
+        {
+            requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
+            using (var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead))
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    books = JsonSerializer.Deserialize<List<BookListViewModel>>(content, new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    });
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+                else
+                {
+                    throw new Exception(response.StatusCode.ToString());
+                }
+            }
+        }
+
+        return books;
+    }
+
     public async Task<BookListViewModel> GetBookById(int id)
     {
         var client = _httpClientFactory.CreateClient("BooksClient");

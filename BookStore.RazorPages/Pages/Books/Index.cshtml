@@ -4,6 +4,14 @@
     ViewData["Title"] = "Books";
 }
 
+<form method="get">
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search..." asp-for="SearchTerm">
+        <button type="submit" id="searchButton">Search</button>
+    </div>
+</form>
+
+
 @if (Model.Books?.Any() == true)
 {
     <div class="card-container">
