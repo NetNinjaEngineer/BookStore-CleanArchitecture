@@ -1,7 +1,9 @@
 ﻿.card-container {
+    margin-top: 30px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    z-index: -1000;
 }
 
 .card {
@@ -53,28 +55,3 @@
 .card-link:hover {
     color: #007bff;
 }
-
-.search-container {
-    margin-bottom: 20px;
-}
-
-#searchInput {
-    padding: 8px;
-    width: 200px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 10px;
-}
-
-#searchButton {
-    padding: 8px 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-    #searchButton:hover {
-        background-color: #45a049;
-    }
