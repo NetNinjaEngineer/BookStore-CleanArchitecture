@@ -8,7 +8,7 @@ public abstract class BaseHttpService
 {
     protected readonly HttpClient _httpClient;
     protected readonly ILocalStorageService _localStorageService;
-    private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
+    protected readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
     protected BaseHttpService(HttpClient httpClient,
         ILocalStorageService localStorageService)
@@ -25,5 +25,22 @@ public abstract class BaseHttpService
             _httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
         }
+    }
+
+    protected HttpRequestMessage PrepareRequest(
+        HttpMethod method, string url)
+    {
+        HttpRequestMessage requestMessage = new(method, url);
+        requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        return requestMessage;
+    }
+
+    protected async Task<HttpResponseMessage> ProcessResponse(
+        HttpRequestMessage requestMessage,
+        HttpCompletionOption completionOption)
+    {
+        HttpResponseMessage response = await _httpClient.SendAsync(
+            requestMessage, completionOption);
+        return response;
     }
 }

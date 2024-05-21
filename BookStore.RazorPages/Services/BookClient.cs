@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BookStore.RazorPages.Contracts;
 using BookStore.RazorPages.Models;
-using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace BookStore.RazorPages.Services;
@@ -23,28 +22,25 @@ public sealed class BookClient : BaseHttpService, IBookClient
     {
         var books = new List<BookListViewModel>();
 
-        using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/Books"))
+        using (var requestMessage = PrepareRequest(HttpMethod.Get, "api/Books"))
         {
-            requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AddBearerToken());
-            using (var response = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead))
+            AddBearerToken(_localStorageService.GetStorageValue<string>("token"));
+            using var response = await ProcessResponse(requestMessage, HttpCompletionOption.ResponseHeadersRead);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                var content = await response.Content.ReadAsStringAsync();
+                books = JsonSerializer.Deserialize<List<BookListViewModel>>(content, new JsonSerializerOptions
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    books = JsonSerializer.Deserialize<List<BookListViewModel>>(content, new JsonSerializerOptions
-                    {
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                    });
-                }
-                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    throw new Exception(response.ReasonPhrase);
-                }
-                else
-                {
-                    throw new Exception(response.StatusCode.ToString());
-                }
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                throw new Exception(response.ReasonPhrase);
+            }
+            else
+            {
+                throw new Exception(response.StatusCode.ToString());
             }
         }
 
@@ -55,28 +51,25 @@ public sealed class BookClient : BaseHttpService, IBookClient
     {
         var books = new List<BookListViewModel>();
 
-        using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, $"api/Books/Search?SearchTerm={searchTerm}"))
+        using (var requestMessage = PrepareRequest(HttpMethod.Post, $"api/Books/Search?SearchTerm={searchTerm}"))
         {
-            requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AddBearerToken());
-            using (var response = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead))
+            AddBearerToken(_localStorageService.GetStorageValue<string>("token"));
+            using var response = await ProcessResponse(requestMessage, HttpCompletionOption.ResponseHeadersRead);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                var content = await response.Content.ReadAsStringAsync();
+                books = JsonSerializer.Deserialize<List<BookListViewModel>>(content, new JsonSerializerOptions
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    books = JsonSerializer.Deserialize<List<BookListViewModel>>(content, new JsonSerializerOptions
-                    {
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                    });
-                }
-                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    throw new Exception(response.ReasonPhrase);
-                }
-                else
-                {
-                    throw new Exception(response.StatusCode.ToString());
-                }
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                throw new Exception(response.ReasonPhrase);
+            }
+            else
+            {
+                throw new Exception(response.StatusCode.ToString());
             }
         }
 
@@ -87,22 +80,19 @@ public sealed class BookClient : BaseHttpService, IBookClient
     {
         BookListViewModel book = new();
 
-        using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, $"api/Books/{id}"))
+        using (var requestMessage = PrepareRequest(HttpMethod.Get, $"api/books/{id}"))
         {
-            requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AddBearerToken());
-            using (var response = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead))
+            AddBearerToken(_localStorageService.GetStorageValue<string>("token"));
+            using var response = await ProcessResponse(requestMessage, HttpCompletionOption.ResponseHeadersRead);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    JsonSerializerOptions options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-                    book = JsonSerializer.Deserialize<BookListViewModel>(content, options)!;
-                }
-                else
-                {
-                    throw new Exception(response.Content.ToString());
-                }
+                var content = await response.Content.ReadAsStringAsync();
+                JsonSerializerOptions options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+                book = JsonSerializer.Deserialize<BookListViewModel>(content, options)!;
+            }
+            else
+            {
+                throw new Exception(response.Content.ToString());
             }
         }
 

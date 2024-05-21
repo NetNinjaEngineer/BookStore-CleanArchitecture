@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 
-builder.Services.AddHttpClient("BooksClient", options =>
+builder.Services.AddHttpClient<IClient>(options =>
 {
     options.BaseAddress = new Uri("https://localhost:7035");
     options.DefaultRequestHeaders.Clear();

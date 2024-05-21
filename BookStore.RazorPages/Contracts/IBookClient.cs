@@ -2,7 +2,7 @@
 
 namespace BookStore.RazorPages.Contracts;
 
-public interface IBookClient
+public interface IBookClient : IClient
 {
     Task<IEnumerable<BookListViewModel>> GetAllBooks();
     Task<IEnumerable<BookListViewModel>?> GetAllBooks(string searchTerm);

@@ -1,4 +1,5 @@
 ﻿using BookStore.RazorPages.Contracts;
+using Hanssens.Net;
 
 namespace BookStore.RazorPages.Services;
 
@@ -12,7 +13,7 @@ public class LocalStorageService : ILocalStorageService
         {
             AutoLoad = true,
             AutoSave = true,
-            Filename = "HR.LeaveManage"
+            Filename = "Bookstore"
         };
 
         _localStorage = new LocalStorage(config);

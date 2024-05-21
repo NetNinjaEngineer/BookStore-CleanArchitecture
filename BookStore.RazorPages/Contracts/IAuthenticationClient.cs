@@ -1,5 +1,10 @@
-﻿namespace BookStore.RazorPages.Contracts;
+﻿using BookStore.RazorPages.Models;
 
-public interface IAuthenticationClient
+namespace BookStore.RazorPages.Contracts;
+
+public interface IAuthenticationClient : IClient
 {
+    Task<bool> RegisterAsync(RegisterModel registerModel);
+    Task<bool> AuthenticateAsync(AuthenticateModel authenticateModel);
+    Task LogoutAsync();
 }
