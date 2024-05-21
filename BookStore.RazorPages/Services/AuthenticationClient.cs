@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -14,16 +13,19 @@ public sealed class AuthenticationClient : BaseHttpService, IAuthenticationClien
 {
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly ILogger<AuthenticationClient> _logger;
+    private readonly IConfiguration _configuration;
 
     public AuthenticationClient(
         HttpClient httpClient,
         ILocalStorageService localStorageService,
         IHttpContextAccessor contextAccessor,
-        ILogger<AuthenticationClient> logger)
+        ILogger<AuthenticationClient> logger,
+        IConfiguration configuration)
         : base(httpClient, localStorageService)
     {
         _contextAccessor = contextAccessor;
         _logger = logger;
+        _configuration = configuration;
     }
 
     public async Task<bool> AuthenticateAsync(AuthenticateModel authenticateModel)
@@ -35,15 +37,19 @@ public sealed class AuthenticationClient : BaseHttpService, IAuthenticationClien
                 Email = authenticateModel.Email,
                 Password = authenticateModel.Password
             };
-            using var requestMessage = PrepareRequest(HttpMethod.Post, "api/auth/login");
-            requestMessage.Content!.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var baseUrl = _configuration["ApiBaseUrl"];
+            using var requestMessage = PrepareRequest(HttpMethod.Post, $"{baseUrl}/api/auth/login");
             var serializedAuthenticationModel = JsonSerializer.Serialize(model);
             requestMessage.Content = new StringContent(serializedAuthenticationModel);
+            requestMessage.Content.Headers.ContentType!.MediaType = "application/json";
             using var response = await ProcessResponse(requestMessage, HttpCompletionOption.ResponseHeadersRead);
 
             var apiResponse = await response.Content.ReadAsStringAsync();
 
-            var authenticatedResult = JsonSerializer.Deserialize<AuthModel>(apiResponse);
+            var authenticatedResult = JsonSerializer.Deserialize<AuthModel>(apiResponse, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
 
             switch (response.StatusCode)
             {
@@ -54,7 +60,7 @@ public sealed class AuthenticationClient : BaseHttpService, IAuthenticationClien
                         if (jwtToken is not null)
                         {
                             var decodedJwt = DecodeJwtToken(jwtToken);
-                            var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(decodedJwt.Claims));
+                            var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(decodedJwt.Claims, CookieAuthenticationDefaults.AuthenticationScheme));
                             await _contextAccessor.HttpContext!.SignInAsync(claimsPrincipal, new AuthenticationProperties
                             {
                                 IsPersistent = true,

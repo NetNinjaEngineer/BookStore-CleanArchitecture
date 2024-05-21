@@ -8,21 +8,23 @@ namespace BookStore.RazorPages.Services;
 public sealed class BookClient : BaseHttpService, IBookClient
 {
     private readonly IMapper _mapper;
+    private readonly IConfiguration _configuration;
 
     public BookClient(
         HttpClient httpClient,
         ILocalStorageService localStorageService,
-        IMapper mapper)
+        IMapper mapper,
+        IConfiguration configuration)
         : base(httpClient, localStorageService)
     {
         _mapper = mapper;
+        _configuration = configuration;
     }
 
     public async Task<IEnumerable<BookListViewModel>> GetAllBooks()
     {
         var books = new List<BookListViewModel>();
-
-        using (var requestMessage = PrepareRequest(HttpMethod.Get, "api/Books"))
+        using (var requestMessage = PrepareRequest(HttpMethod.Get, $"{_configuration["ApiBaseUrl"]}/api/Books"))
         {
             AddBearerToken(_localStorageService.GetStorageValue<string>("token"));
             using var response = await ProcessResponse(requestMessage, HttpCompletionOption.ResponseHeadersRead);
@@ -51,7 +53,7 @@ public sealed class BookClient : BaseHttpService, IBookClient
     {
         var books = new List<BookListViewModel>();
 
-        using (var requestMessage = PrepareRequest(HttpMethod.Post, $"api/Books/Search?SearchTerm={searchTerm}"))
+        using (var requestMessage = PrepareRequest(HttpMethod.Post, $"{_configuration["ApiBaseUrl"]}/api/Books/Search?SearchTerm={searchTerm}"))
         {
             AddBearerToken(_localStorageService.GetStorageValue<string>("token"));
             using var response = await ProcessResponse(requestMessage, HttpCompletionOption.ResponseHeadersRead);
@@ -80,7 +82,7 @@ public sealed class BookClient : BaseHttpService, IBookClient
     {
         BookListViewModel book = new();
 
-        using (var requestMessage = PrepareRequest(HttpMethod.Get, $"api/books/{id}"))
+        using (var requestMessage = PrepareRequest(HttpMethod.Get, $"{_configuration["ApiBaseUrl"]}/api/books/{id}"))
         {
             AddBearerToken(_localStorageService.GetStorageValue<string>("token"));
             using var response = await ProcessResponse(requestMessage, HttpCompletionOption.ResponseHeadersRead);

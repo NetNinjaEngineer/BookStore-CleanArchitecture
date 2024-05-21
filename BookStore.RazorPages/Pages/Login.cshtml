@@ -9,9 +9,9 @@
         <img src="bookstore_logo.png" alt="Book Store Logo">
     </div>
     <h2>Login to Book Store</h2>
-    <form action="#" method="POST">
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
+    <form method="POST">
+        <input type="email" name="email" asp-for="@Model.AuthenticateModel!.Email" placeholder="Email" required>
+        <input type="password" name="password" asp-for="@Model.AuthenticateModel!.Password" placeholder="Password" required>
         <input type="submit" value="Login">
     </form>
     <div class="footer">

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
-
 builder.Services.AddHttpClient<IClient>(options =>
 {
     options.BaseAddress = new Uri("https://localhost:7035");
@@ -13,11 +12,10 @@ builder.Services.AddHttpClient<IClient>(options =>
 });
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
 builder.Services.AddScoped<IBookClient, BookClient>();
-
+builder.Services.AddScoped<IAuthenticationClient, AuthenticationClient>();
+builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
