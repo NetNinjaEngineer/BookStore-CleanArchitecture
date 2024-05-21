@@ -1,0 +1,20 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container">
+    <div class="logo">
+        <img src="https://th.bing.com/th/id/OIP.5_ztDj8i4KVN8ALxUWPgBQHaFj?w=234&h=180&c=7&r=0&o=5&pid=1.7" alt="Book Store Logo">
+    </div>
+    <h2>Login to Book Store</h2>
+    <form method="POST">
+        <input name="email" type="email" placeholder="Email" required />
+        <input name="password" type="password" placeholder="Password" required />
+        <input type="submit" value="Login">
+    </form>
+    <div class="footer">
+        Don't have an account? <a asp-page="/Authentication/SignUp">Sign up</a>
+    </div>
+</div>

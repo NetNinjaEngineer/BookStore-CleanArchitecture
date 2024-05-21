@@ -46,3 +46,23 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+.dropdown-menu {
+    background-color: #f8f9fa;
+    border: none; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu .dropdown-item {
+    padding: 8px 16px;
+    font-size: 16px;
+}
+
+.dropdown-toggle::after {
+    margin-left: 5px;
+}
+
+.dropdown-menu button[type="submit"] {
+    margin-top: 10px;
+    width: 100%;
+}

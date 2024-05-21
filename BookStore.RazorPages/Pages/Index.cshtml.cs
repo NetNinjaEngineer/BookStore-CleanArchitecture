@@ -1,10 +1,12 @@
 using BookStore.RazorPages.Contracts;
 using BookStore.RazorPages.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BookStore.RazorPages.Pages.Books
+namespace BookStore.RazorPages.Pages
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly IBookClient _bookService;

@@ -1,0 +1,43 @@
+﻿@page
+@model BookStore.RazorPages.Pages.Authentication.SignUpModel
+@{
+    ViewData["Title"] = "Sign Up";
+}
+
+<h1>Sign Up</h1>
+
+<form method="post">
+    <div asp-validation-summary="All"></div>
+
+    <div class="form-group">
+        <label asp-for="@Model.RegisterInputModel!.FirstName"></label>
+        <input asp-for="@Model.RegisterInputModel!.FirstName" class="form-control" />
+        <span asp-validation-for="@Model.RegisterInputModel!.FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.RegisterInputModel!.LastName"></label>
+        <input asp-for="@Model.RegisterInputModel!.LastName" class="form-control" />
+        <span asp-validation-for="@Model.RegisterInputModel!.LastName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.RegisterInputModel!.Username"></label>
+        <input asp-for="@Model.RegisterInputModel!.Username" class="form-control" />
+        <span asp-validation-for="@Model.RegisterInputModel!.Username" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.RegisterInputModel!.Email"></label>
+        <input asp-for="@Model.RegisterInputModel!.Email" class="form-control" />
+        <span asp-validation-for="@Model.RegisterInputModel!.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.RegisterInputModel!.Password"></label>
+        <input asp-for="@Model.RegisterInputModel!.Password" type="password" class="form-control" />
+        <span asp-validation-for="@Model.RegisterInputModel!.Password" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>

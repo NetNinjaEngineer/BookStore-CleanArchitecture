@@ -1,10 +1,12 @@
 using BookStore.RazorPages.Contracts;
 using BookStore.RazorPages.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BookStore.RazorPages.Pages.Books
 {
+    [Authorize]
     public class DetailsModel : PageModel
     {
         private readonly IBookClient bookService;

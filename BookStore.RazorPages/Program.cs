@@ -19,8 +19,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = new PathString("/Login");
-        options.AccessDeniedPath = new PathString("/AccessDenied");
+        options.LoginPath = new PathString("/Authentication/Login");
+        options.AccessDeniedPath = new PathString("/Authentication/AccessDenied");
     });
 
 var app = builder.Build();

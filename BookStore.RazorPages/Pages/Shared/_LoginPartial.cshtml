@@ -1,0 +1,31 @@
+﻿@using System.Security.Claims
+<ul class="navbar-nav">
+    @if (User.Identity!.IsAuthenticated)
+    {
+        <li class="nav-item">
+            <span class="nav-link">Welcome Back, @User.FindFirst("sub")?.Value</span>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" method="get" asp-page="/Authentication/Logout">
+                <button type="submit" class="nav-link btn btn-link ">
+                    Logout
+                </button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+
+            <a class="nav-link" asp-page="/Authentication/SignUp">
+                Register
+            </a>
+        </li>
+        <li class="nav-item">
+
+            <a class="nav-link" asp-page="/Authentication/Login">
+                Login
+            </a>
+        </li>
+    }
+</ul>

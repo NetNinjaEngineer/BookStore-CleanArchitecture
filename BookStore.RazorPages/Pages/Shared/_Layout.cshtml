@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BookStore.RazorPages</title>
+    <title>@ViewData["Title"] - Book store</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BookStore.RazorPages.styles.css" asp-append-version="true" />
@@ -18,11 +18,26 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Books/Index">Home</a>
-                        </li>
-                    </ul>
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Books</a>
+                            </li>
+                            <div class="dropdown">
+                                <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Manage
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-page="/Books/Create" >Create book</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Books/Update">Update book</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Books/Delete">Delete book</a></li>
+                                </ul>
+                            </div>
+                        </ul>
+                    }
+
+                    <partial name="_LoginPartial.cshtml" />
                 </div>
             </div>
         </nav>
@@ -35,7 +50,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - BookStore.RazorPages - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2024 - Book store - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
 
