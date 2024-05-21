@@ -6,27 +6,28 @@ using System.Text.Json;
 
 namespace BookStore.RazorPages.Services;
 
-public class BookService : BaseHttpService, IBookService
+public sealed class BookClient : BaseHttpService, IBookClient
 {
     private readonly IMapper _mapper;
-    private readonly IHttpClientFactory _httpClientFactory;
 
-    public BookService(IMapper mapper, IHttpClientFactory httpClientFactory)
+    public BookClient(
+        HttpClient httpClient,
+        ILocalStorageService localStorageService,
+        IMapper mapper)
+        : base(httpClient, localStorageService)
     {
         _mapper = mapper;
-        _httpClientFactory = httpClientFactory;
     }
 
     public async Task<IEnumerable<BookListViewModel>> GetAllBooks()
     {
-        var client = _httpClientFactory.CreateClient("BooksClient");
         var books = new List<BookListViewModel>();
 
         using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/Books"))
         {
             requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
-            using (var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead))
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AddBearerToken());
+            using (var response = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead))
             {
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
@@ -52,14 +53,13 @@ public class BookService : BaseHttpService, IBookService
 
     public async Task<IEnumerable<BookListViewModel>?> GetAllBooks(string searchTerm)
     {
-        var client = _httpClientFactory.CreateClient("BooksClient");
         var books = new List<BookListViewModel>();
 
         using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, $"api/Books/Search?SearchTerm={searchTerm}"))
         {
             requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
-            using (var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead))
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AddBearerToken());
+            using (var response = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead))
             {
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
@@ -85,14 +85,13 @@ public class BookService : BaseHttpService, IBookService
 
     public async Task<BookListViewModel> GetBookById(int id)
     {
-        var client = _httpClientFactory.CreateClient("BooksClient");
         BookListViewModel book = new();
 
         using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, $"api/Books/{id}"))
         {
             requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
-            using (var response = await client.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead))
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AddBearerToken());
+            using (var response = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead))
             {
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {

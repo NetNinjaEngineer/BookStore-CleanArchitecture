@@ -7,9 +7,9 @@ namespace BookStore.RazorPages.Pages.Books
 {
     public class IndexModel : PageModel
     {
-        private readonly IBookService _bookService;
+        private readonly IBookClient _bookService;
 
-        public IndexModel(IBookService bookService)
+        public IndexModel(IBookClient bookService)
         {
             _bookService = bookService;
         }

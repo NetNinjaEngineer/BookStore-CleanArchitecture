@@ -1,6 +1,6 @@
-﻿namespace BookStore.RazorPages.Services;
+﻿namespace BookStore.RazorPages.Models;
 
-internal class GetTokenRequestModel
+public class GetTokenRequestModel
 {
     public string? Email { get; set; }
     public string? Password { get; set; }

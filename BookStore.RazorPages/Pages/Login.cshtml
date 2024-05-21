@@ -1,0 +1,20 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container">
+    <div class="logo">
+        <img src="bookstore_logo.png" alt="Book Store Logo">
+    </div>
+    <h2>Login to Book Store</h2>
+    <form action="#" method="POST">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="submit" value="Login">
+    </form>
+    <div class="footer">
+        Don't have an account? <a href="#">Sign up</a>
+    </div>
+</div>

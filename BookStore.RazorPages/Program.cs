@@ -1,5 +1,6 @@
 using BookStore.RazorPages.Contracts;
 using BookStore.RazorPages.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +14,16 @@ builder.Services.AddHttpClient("BooksClient", options =>
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
-builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IBookClient, BookClient>();
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = new PathString("/Login");
+        options.AccessDeniedPath = new PathString("/AccessDenied");
+    });
 
 var app = builder.Build();
 
@@ -30,6 +38,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
