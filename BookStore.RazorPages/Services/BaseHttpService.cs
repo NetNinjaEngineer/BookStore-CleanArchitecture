@@ -9,14 +9,19 @@ public abstract class BaseHttpService
     protected readonly HttpClient _httpClient;
     protected readonly ILocalStorageService _localStorageService;
     protected readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
+    private readonly IConfiguration _configuration;
 
     protected BaseHttpService(HttpClient httpClient,
-        ILocalStorageService localStorageService)
+        ILocalStorageService localStorageService,
+        IConfiguration configuration)
     {
         _httpClient = httpClient;
         _localStorageService = localStorageService;
         _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+        _configuration = configuration;
     }
+
+    protected string? BaseUrl => _configuration["ApiBaseUrl"];
 
     protected void AddBearerToken(string token)
     {

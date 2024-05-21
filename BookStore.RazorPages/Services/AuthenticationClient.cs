@@ -13,7 +13,6 @@ public sealed class AuthenticationClient : BaseHttpService, IAuthenticationClien
 {
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly ILogger<AuthenticationClient> _logger;
-    private readonly IConfiguration _configuration;
 
     public AuthenticationClient(
         HttpClient httpClient,
@@ -21,11 +20,10 @@ public sealed class AuthenticationClient : BaseHttpService, IAuthenticationClien
         IHttpContextAccessor contextAccessor,
         ILogger<AuthenticationClient> logger,
         IConfiguration configuration)
-        : base(httpClient, localStorageService)
+        : base(httpClient, localStorageService, configuration)
     {
         _contextAccessor = contextAccessor;
         _logger = logger;
-        _configuration = configuration;
     }
 
     public async Task<bool> AuthenticateAsync(AuthenticateModel authenticateModel)
@@ -37,8 +35,8 @@ public sealed class AuthenticationClient : BaseHttpService, IAuthenticationClien
                 Email = authenticateModel.Email,
                 Password = authenticateModel.Password
             };
-            var baseUrl = _configuration["ApiBaseUrl"];
-            using var requestMessage = PrepareRequest(HttpMethod.Post, $"{baseUrl}/api/auth/login");
+
+            using var requestMessage = PrepareRequest(HttpMethod.Post, $"{BaseUrl}/api/auth/login");
             var serializedAuthenticationModel = JsonSerializer.Serialize(model);
             requestMessage.Content = new StringContent(serializedAuthenticationModel);
             requestMessage.Content.Headers.ContentType!.MediaType = "application/json";
@@ -64,6 +62,7 @@ public sealed class AuthenticationClient : BaseHttpService, IAuthenticationClien
                             await _contextAccessor.HttpContext!.SignInAsync(claimsPrincipal, new AuthenticationProperties
                             {
                                 IsPersistent = true,
+                                ExpiresUtc = DateTimeOffset.Now.AddMinutes(20),
                             });
 
                             _localStorageService.SetStorageValue("token", authenticatedResult.Token);

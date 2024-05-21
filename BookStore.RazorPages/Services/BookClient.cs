@@ -15,16 +15,15 @@ public sealed class BookClient : BaseHttpService, IBookClient
         ILocalStorageService localStorageService,
         IMapper mapper,
         IConfiguration configuration)
-        : base(httpClient, localStorageService)
+        : base(httpClient, localStorageService, configuration)
     {
         _mapper = mapper;
-        _configuration = configuration;
     }
 
     public async Task<IEnumerable<BookListViewModel>> GetAllBooks()
     {
         var books = new List<BookListViewModel>();
-        using (var requestMessage = PrepareRequest(HttpMethod.Get, $"{_configuration["ApiBaseUrl"]}/api/Books"))
+        using (var requestMessage = PrepareRequest(HttpMethod.Get, $"{BaseUrl}/api/Books"))
         {
             AddBearerToken(_localStorageService.GetStorageValue<string>("token"));
             using var response = await ProcessResponse(requestMessage, HttpCompletionOption.ResponseHeadersRead);
@@ -53,7 +52,7 @@ public sealed class BookClient : BaseHttpService, IBookClient
     {
         var books = new List<BookListViewModel>();
 
-        using (var requestMessage = PrepareRequest(HttpMethod.Post, $"{_configuration["ApiBaseUrl"]}/api/Books/Search?SearchTerm={searchTerm}"))
+        using (var requestMessage = PrepareRequest(HttpMethod.Post, $"{BaseUrl}/api/Books/Search?SearchTerm={searchTerm}"))
         {
             AddBearerToken(_localStorageService.GetStorageValue<string>("token"));
             using var response = await ProcessResponse(requestMessage, HttpCompletionOption.ResponseHeadersRead);
@@ -82,7 +81,7 @@ public sealed class BookClient : BaseHttpService, IBookClient
     {
         BookListViewModel book = new();
 
-        using (var requestMessage = PrepareRequest(HttpMethod.Get, $"{_configuration["ApiBaseUrl"]}/api/books/{id}"))
+        using (var requestMessage = PrepareRequest(HttpMethod.Get, $"{BaseUrl}/api/books/{id}"))
         {
             AddBearerToken(_localStorageService.GetStorageValue<string>("token"));
             using var response = await ProcessResponse(requestMessage, HttpCompletionOption.ResponseHeadersRead);

@@ -17,7 +17,7 @@
     <div class="card-container">
         @foreach (var book in Model.Books)
         {
-           <a href="@Url.Page("Details", new {id = book.Id})" class="card-link">
+           <a href="@Url.Page("/Books/Details", new {id = book.Id})" class="card-link">
                 <div class="card">
                     <img src="@book.ImageUrl" alt="Book Cover">
                     <div class="card-content">

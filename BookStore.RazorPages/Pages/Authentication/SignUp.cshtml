@@ -6,38 +6,36 @@
 
 <h1>Sign Up</h1>
 
-<form method="post">
-    <div asp-validation-summary="All"></div>
-
-    <div class="form-group">
-        <label asp-for="@Model.RegisterInputModel!.FirstName"></label>
-        <input asp-for="@Model.RegisterInputModel!.FirstName" class="form-control" />
-        <span asp-validation-for="@Model.RegisterInputModel!.FirstName" class="text-danger"></span>
+<div class="container">
+    <div class="logo">
+        <img src="https://th.bing.com/th/id/OIP.5_ztDj8i4KVN8ALxUWPgBQHaFj?w=234&h=180&c=7&r=0&o=5&pid=1.7" alt="Book Store Logo">
     </div>
+    <h2>Sign Up for Book Store</h2>
+    <form method="POST" action="/Authentication/Register">
+      <div>
+            <input name="firstName" type="text" placeholder="First Name" required />
+            <span asp-validation-for="@Model.RegisterInputModel!.FirstName"></span>
+      </div>
+       <div>
+            <input name="lastName" type="text" placeholder="Last Name" required />
+            <span asp-validation-for="@Model.RegisterInputModel!.LastName"></span>
+       </div>
+       <div>
+            <input name="username" type="text" placeholder="Username" required />
+            <span asp-validation-for="@Model.RegisterInputModel!.Username"></span>
+        </div>
+        <div>
+            <input name="email" type="email" placeholder="Email" required />
+            <span asp-validation-for="@Model.RegisterInputModel!.Email"></span>
+        </div>
+        <div>
+            <input name="password" type="password" placeholder="Password" required />
+            <span asp-validation-for="@Model.RegisterInputModel!.Password"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="@Model.RegisterInputModel!.LastName"></label>
-        <input asp-for="@Model.RegisterInputModel!.LastName" class="form-control" />
-        <span asp-validation-for="@Model.RegisterInputModel!.LastName" class="text-danger"></span>
+        <input type="submit" value="Sign Up">
+    </form>
+    <div class="footer">
+        Already have an account? <a href="/Authentication/Login">Login</a>
     </div>
-
-    <div class="form-group">
-        <label asp-for="@Model.RegisterInputModel!.Username"></label>
-        <input asp-for="@Model.RegisterInputModel!.Username" class="form-control" />
-        <span asp-validation-for="@Model.RegisterInputModel!.Username" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="@Model.RegisterInputModel!.Email"></label>
-        <input asp-for="@Model.RegisterInputModel!.Email" class="form-control" />
-        <span asp-validation-for="@Model.RegisterInputModel!.Email" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="@Model.RegisterInputModel!.Password"></label>
-        <input asp-for="@Model.RegisterInputModel!.Password" type="password" class="form-control" />
-        <span asp-validation-for="@Model.RegisterInputModel!.Password" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Register</button>
-</form>
+</div>

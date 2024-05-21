@@ -24,16 +24,19 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Index">Books</a>
                             </li>
-                            <div class="dropdown">
-                                <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Manage
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-page="/Books/Create" >Create book</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Books/Update">Update book</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Books/Delete">Delete book</a></li>
-                                </ul>
-                            </div>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div class="dropdown">
+                                    <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Manage
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-page="/Books/Create">Create book</a></li>
+                                        <li><a class="dropdown-item" asp-page="/Books/Update">Update book</a></li>
+                                        <li><a class="dropdown-item" asp-page="/Books/Delete">Delete book</a></li>
+                                    </ul>
+                                </div>
+                            }
                         </ul>
                     }
 
